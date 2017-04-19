@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Stats on Fox and the flu</title>
+    <link>https://sjfox.github.io/tags/stats/index.xml</link>
+    <description>Recent content in Stats on Fox and the flu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <atom:link href="https://sjfox.github.io/tags/stats/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Bootstrapping Time Series Data</title>
+      <link>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</link>
+      <pubDate>Sat, 23 Jul 2016 21:13:14 -0500</pubDate>
+      
+      <guid>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</guid>
+      <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;This demonstration is part of a requirement for my statistical consulting class at UT Austin. I will go through the basics of bootstrapping time series data using three different resampling methods.&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Fixed Block Sampling&lt;/li&gt;
+&lt;li&gt;Stationary Block Sampling&lt;/li&gt;
+&lt;li&gt;Model-based resampling&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div id=&#34;packages-used&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Packages Used&lt;/h1&gt;
+&lt;p&gt;For this demonstration I will use the following packages: The &lt;code&gt;boot&lt;/code&gt; package is the workhorse behind the bootstrapping methods, but the &lt;code&gt;forecast&lt;/code&gt; method is used for the time series modeling. &lt;code&gt;tidyverse&lt;/code&gt;, &lt;code&gt;cowplot&lt;/code&gt;, and &lt;code&gt;lubridate&lt;/code&gt; are all packages used for cleaning the data and presenting the results at the end, so aren’t as necessary depending on your preferred methods.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(boot)
+library(forecast)
+library(tidyverse)
+library(cowplot)
+library(lubridate)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;question-of-interest&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Question of interest&lt;/h1&gt;
+&lt;p&gt;We will be investigating the Rio Negro river level in the &lt;code&gt;manaus&lt;/code&gt; dataset. We are interested in developing an AR(p) model to describe the river level through time. However, we are not interested in selecting the &lt;code&gt;p&lt;/code&gt; that is the best for the data, but rather understanding the full distribution of &lt;code&gt;p&lt;/code&gt; for these data, which is where the bootstrapping will come into play.&lt;/p&gt;
+&lt;p&gt;Always a good idea to see what your data look like first:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(manaus)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;creating-a-function-for-obtaining-a-test-statistic&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Creating a function for obtaining a test statistic&lt;/h1&gt;
+&lt;p&gt;The &lt;code&gt;boot&lt;/code&gt; package requires a function that returns your statistic of interest for any data supplied. We will create a function that finds the maximum likelihood order (p) for a time series that is supplied as &lt;code&gt;tsb&lt;/code&gt;. We return the best fit order, the mean of the time-series, and then the whole time series data, as a means to extract this information later. Really you would only need to return the statistic itself depending on your goals.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;manaus_fun &amp;lt;- function(tsb) {
+    ar.fit &amp;lt;- auto.arima(tsb, max.p = 25, max.d = 0, max.q = 0, max.P = 0, max.Q = 0, 
+        max.D = 0, ic = &amp;quot;aic&amp;quot;, max.order = 25, seasonal = FALSE)
+    c(ar.fit$arma[1], mean(tsb), tsb)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;bootstrapping-the-statistic&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Bootstrapping the statistic&lt;/h1&gt;
+&lt;p&gt;For time series data we will use the &lt;code&gt;tsboot&lt;/code&gt; function, which has several methods for resampling the time series data. We will show three of them here. I would refer the user to &lt;a href=&#34;http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch26.pdf&#34;&gt;this description&lt;/a&gt; for a further explanation on the difference between the methods. I’ll first set that we want to obtain a statistic for 100 resamplings of our data, and that we want our blocks for block sampling to be of the length of the data raised to the (1/3) power.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;num_resamples &amp;lt;- 1000
+block_length &amp;lt;- round(length(manaus)^(1/3))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;fixed-block-sampling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Fixed Block Sampling&lt;/h2&gt;
+&lt;p&gt;For fixed block sampling, you first generate a date to begin a block, and then select from that date to a point that gives a time series of length &lt;code&gt;block_length&lt;/code&gt;. You then draw a new time point, select a new block, and add it to your time series. You repeat the process until you have a time series of the length of your original time series. You then calculate a statistic for each sample, and aggregate the results.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;tsboot()&lt;/code&gt; function takes the original time series, your time series function that calculates the statistic (&lt;code&gt;manaus_fun&lt;/code&gt;), the number of samples you want (&lt;code&gt;R&lt;/code&gt;), the block length (&lt;code&gt;l&lt;/code&gt;), and the simulation type desired (&lt;code&gt;sim&lt;/code&gt;). In this case we will set &lt;code&gt;sim=&amp;quot;fixed&amp;quot;&lt;/code&gt; for fixed block sampling.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# the fixed block bootstrap with length
+manaus_fixed &amp;lt;- tsboot(manaus, manaus_fun, R = num_resamples, l = block_length, 
+    sim = &amp;quot;fixed&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;stationary-block-sampling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Stationary Block Sampling&lt;/h2&gt;
+&lt;p&gt;For stationary block sampling, you first generate a date to begin a block, and then select a random length generated by a geometric distribution with mean, &lt;code&gt;block_length&lt;/code&gt;. You save that block of data, and then draw a new time point and block length, select it, add it to your time series. You repeat the process until you have a time series of the length of your original time series. Just like in the fixed block sampling, you repeat that process until you have all of your resampled time series, and aggregate the statistics for each one.&lt;/p&gt;
+&lt;p&gt;In this case we will set &lt;code&gt;sim=&amp;quot;geom&amp;quot;&lt;/code&gt; for stationary block sampling.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# the stationary bootstrap with mean block length 20
+manaus_geom &amp;lt;- tsboot(manaus, manaus_fun, R = num_resamples, l = block_length, 
+    sim = &amp;quot;geom&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-based-sampling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model-based Sampling&lt;/h2&gt;
+&lt;p&gt;For model-based resampling, the trick is to use your model to generate new time series, and adding noise with the resampled residuals from the fit. This method is particularly risky if you are not entirely sure about the underlying model for your data.&lt;/p&gt;
+&lt;p&gt;We first have to fit the model, and extract the residuals from the model. Then we create a function that can simulate arima models according to our fit model. The &lt;code&gt;rand.gen&lt;/code&gt; argument to the arima.sim function is the most important for determining the resampling of the residuals, as the new innovations for simulating time series.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## First fit the model
+manaus_ar &amp;lt;- auto.arima(manaus, max.p = 25, max.d = 0, max.q = 0, max.P = 0, 
+    max.Q = 0, max.D = 0, ic = &amp;quot;aic&amp;quot;, max.order = 25, seasonal = FALSE)
+
+## Create list containing the components of fit model
+manaus_mod &amp;lt;- list(order = c(manaus_ar$arma[1], 0, 0), ar = coef(manaus_ar))
+
+## Extract the residuals
+manaus_res &amp;lt;- resid(manaus_ar) - mean(resid(manaus_ar))
+
+## Simulation function for simulating
+manaus_sim &amp;lt;- function(res, n.sim, ran.args) {
+    # random generation of replicate series using arima.sim
+    rg1 &amp;lt;- function(n, res) sample(res, n, replace = TRUE)
+    ts.orig &amp;lt;- ran.args$ts
+    ts.mod &amp;lt;- ran.args$model
+    mean(ts.orig) + ts(arima.sim(model = ts.mod, n = n.sim, rand.gen = rg1, 
+        res = as.vector(res)))
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once we’ve setup the time-series simulation framework, we can once again use the &lt;code&gt;tsboot&lt;/code&gt; function with a few added arguments.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;manaus_model &amp;lt;- tsboot(manaus_res, manaus_fun, R = num_resamples, sim = &amp;quot;model&amp;quot;, 
+    n.sim = length(manaus), orig.t = FALSE, ran.gen = manaus_sim, ran.args = list(ts = manaus, 
+        model = manaus_mod))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;analyzing-the-results&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Analyzing the results&lt;/h1&gt;
+&lt;p&gt;So we’ve bootstrapped the &lt;code&gt;manaus&lt;/code&gt; data three different ways to get an idea for the variability in AR model order (p). Let’s take a look at some of our simulated data first.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;recording_dates &amp;lt;- expand.grid(seq(1, 12), seq(1903, 1992))
+recording_dates &amp;lt;- paste0(&amp;quot;1/&amp;quot;, recording_dates$Var1, &amp;quot;/&amp;quot;, recording_dates$Var2)
+
+samp_data &amp;lt;- data_frame(time = dmy(recording_dates), true = c(manaus), fixed = manaus_fixed$t[1, 
+    -c(1, 2)], stationary = manaus_geom$t[1, -c(1, 2)], model_based = manaus_model$t[1, 
+    -c(1, 2)])
+
+samp_data %&amp;gt;% gather(key, value, true:model_based) %&amp;gt;% ggplot(aes(time, value)) + 
+    geom_line() + facet_wrap(~key)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The data look very similar to the true data, and if we didn’t know which was true, we probably wouldn’t be able to tell the difference between them, which is exactly what we’d like. Now let’s take a look at the distributions for the order parameter of the AR model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_dists &amp;lt;- data_frame(fixed = manaus_fixed$t[, 1], stationary = manaus_geom$t[, 
+    1], model_based = manaus_model$t[, 1])
+
+p_dists %&amp;gt;% gather(key, value, fixed:model_based) %&amp;gt;% ggplot(aes(value)) + geom_histogram(bins = 15) + 
+    facet_wrap(~key, nrow = 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Looks like the stationary and fixed methods give similar distributions for the order of the autoregressive model, but the model-based distribution is slightly larger. The best fit model to the original data have an order of 4, so you can see that the model-based method for resampling maintains that level of dependence between the data. However, the stationary and fixed methods reduce the dependence between the data slightly (by combining chunks of the time series at random), so the best fit order for the AR models is reduced. Overall, the model-based method appears to work best in this scenario (though there is an increased risk of model misspecification), and we get a confidence interval from 3 to 5 for the order of the model.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

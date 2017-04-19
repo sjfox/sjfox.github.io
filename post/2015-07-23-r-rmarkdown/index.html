@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="generator" content="Hugo 0.19" />
+
+  <title>Bootstrapping Time Series Data &middot; Fox and the flu</title>
+
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
+
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+
+  
+  
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/androidstudio.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
+
+  
+  
+
+</head>
+
+
+<body>
+<div id="layout">
+
+  
+<a href="#menu" id="menuLink" class="menu-link">
+  
+  <span></span>
+</a>
+<div id="menu">
+
+  
+  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Blackburn</a>
+
+
+  <div class="pure-menu">
+    <ul class="pure-menu-list">
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
+      
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="pure-menu social">
+  <ul class="pure-menu-list">
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://twitter.com/foxandtheflu" target="_blank"><i class="fa fa-twitter-square fa-fw"></i>Twitter</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://linkedin.com/in/spencer-fox-a474a547" target="_blank"><i class="fa fa-linkedin-square fa-fw"></i>LinkedIn</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://github.com/sjfox" target="_blank"><i class="fa fa-github-square fa-fw"></i>GitHub</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  </ul>
+</div>
+
+
+  <div>
+  <div class="small-print">
+    <small>&copy; 2016. All rights reserved.</small>
+  </div>
+  <div class="small-print">
+    <small>Built with&nbsp;<a href="https://gohugo.io/" target="_blank">Hugo</a></small>
+    <small>Theme&nbsp;<a href="https://github.com/yoshiharuyamashita/blackburn" target="_blank">Blackburn</a></small>
+  </div>
+</div>
+
+</div>
+
+
+  <div id="main">
+
+
+<div class="header">
+  <h1>Bootstrapping Time Series Data</h1>
+  <h2></h2>
+</div>
+<div class="content">
+
+  <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>23 Jul 2016, 21:13</time>
+  </div>
+
+  
+
+  
+
+  
+  
+  
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/r-markdown">R Markdown</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/stats">stats</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/bootstrap">bootstrap</a>
+    
+  </div>
+  
+  
+
+</div>
+
+  <div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This demonstration is part of a requirement for my statistical consulting class at UT Austin. I will go through the basics of bootstrapping time series data using three different resampling methods.</p>
+<ol style="list-style-type: decimal">
+<li>Fixed Block Sampling</li>
+<li>Stationary Block Sampling</li>
+<li>Model-based resampling</li>
+</ol>
+</div>
+<div id="packages-used" class="section level1">
+<h1>Packages Used</h1>
+<p>For this demonstration I will use the following packages: The <code>boot</code> package is the workhorse behind the bootstrapping methods, but the <code>forecast</code> method is used for the time series modeling. <code>tidyverse</code>, <code>cowplot</code>, and <code>lubridate</code> are all packages used for cleaning the data and presenting the results at the end, so aren’t as necessary depending on your preferred methods.</p>
+<pre class="r"><code>library(boot)
+library(forecast)
+library(tidyverse)
+library(cowplot)
+library(lubridate)</code></pre>
+</div>
+<div id="question-of-interest" class="section level1">
+<h1>Question of interest</h1>
+<p>We will be investigating the Rio Negro river level in the <code>manaus</code> dataset. We are interested in developing an AR(p) model to describe the river level through time. However, we are not interested in selecting the <code>p</code> that is the best for the data, but rather understanding the full distribution of <code>p</code> for these data, which is where the bootstrapping will come into play.</p>
+<p>Always a good idea to see what your data look like first:</p>
+<pre class="r"><code>plot(manaus)</code></pre>
+<p><img src="https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="creating-a-function-for-obtaining-a-test-statistic" class="section level1">
+<h1>Creating a function for obtaining a test statistic</h1>
+<p>The <code>boot</code> package requires a function that returns your statistic of interest for any data supplied. We will create a function that finds the maximum likelihood order (p) for a time series that is supplied as <code>tsb</code>. We return the best fit order, the mean of the time-series, and then the whole time series data, as a means to extract this information later. Really you would only need to return the statistic itself depending on your goals.</p>
+<pre class="r"><code>manaus_fun &lt;- function(tsb) {
+    ar.fit &lt;- auto.arima(tsb, max.p = 25, max.d = 0, max.q = 0, max.P = 0, max.Q = 0, 
+        max.D = 0, ic = &quot;aic&quot;, max.order = 25, seasonal = FALSE)
+    c(ar.fit$arma[1], mean(tsb), tsb)
+}</code></pre>
+</div>
+<div id="bootstrapping-the-statistic" class="section level1">
+<h1>Bootstrapping the statistic</h1>
+<p>For time series data we will use the <code>tsboot</code> function, which has several methods for resampling the time series data. We will show three of them here. I would refer the user to <a href="http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch26.pdf">this description</a> for a further explanation on the difference between the methods. I’ll first set that we want to obtain a statistic for 100 resamplings of our data, and that we want our blocks for block sampling to be of the length of the data raised to the (1/3) power.</p>
+<pre class="r"><code>num_resamples &lt;- 1000
+block_length &lt;- round(length(manaus)^(1/3))</code></pre>
+<div id="fixed-block-sampling" class="section level2">
+<h2>Fixed Block Sampling</h2>
+<p>For fixed block sampling, you first generate a date to begin a block, and then select from that date to a point that gives a time series of length <code>block_length</code>. You then draw a new time point, select a new block, and add it to your time series. You repeat the process until you have a time series of the length of your original time series. You then calculate a statistic for each sample, and aggregate the results.</p>
+<p>The <code>tsboot()</code> function takes the original time series, your time series function that calculates the statistic (<code>manaus_fun</code>), the number of samples you want (<code>R</code>), the block length (<code>l</code>), and the simulation type desired (<code>sim</code>). In this case we will set <code>sim=&quot;fixed&quot;</code> for fixed block sampling.</p>
+<pre class="r"><code># the fixed block bootstrap with length
+manaus_fixed &lt;- tsboot(manaus, manaus_fun, R = num_resamples, l = block_length, 
+    sim = &quot;fixed&quot;)</code></pre>
+</div>
+<div id="stationary-block-sampling" class="section level2">
+<h2>Stationary Block Sampling</h2>
+<p>For stationary block sampling, you first generate a date to begin a block, and then select a random length generated by a geometric distribution with mean, <code>block_length</code>. You save that block of data, and then draw a new time point and block length, select it, add it to your time series. You repeat the process until you have a time series of the length of your original time series. Just like in the fixed block sampling, you repeat that process until you have all of your resampled time series, and aggregate the statistics for each one.</p>
+<p>In this case we will set <code>sim=&quot;geom&quot;</code> for stationary block sampling.</p>
+<pre class="r"><code># the stationary bootstrap with mean block length 20
+manaus_geom &lt;- tsboot(manaus, manaus_fun, R = num_resamples, l = block_length, 
+    sim = &quot;geom&quot;)</code></pre>
+</div>
+<div id="model-based-sampling" class="section level2">
+<h2>Model-based Sampling</h2>
+<p>For model-based resampling, the trick is to use your model to generate new time series, and adding noise with the resampled residuals from the fit. This method is particularly risky if you are not entirely sure about the underlying model for your data.</p>
+<p>We first have to fit the model, and extract the residuals from the model. Then we create a function that can simulate arima models according to our fit model. The <code>rand.gen</code> argument to the arima.sim function is the most important for determining the resampling of the residuals, as the new innovations for simulating time series.</p>
+<pre class="r"><code>## First fit the model
+manaus_ar &lt;- auto.arima(manaus, max.p = 25, max.d = 0, max.q = 0, max.P = 0, 
+    max.Q = 0, max.D = 0, ic = &quot;aic&quot;, max.order = 25, seasonal = FALSE)
+
+## Create list containing the components of fit model
+manaus_mod &lt;- list(order = c(manaus_ar$arma[1], 0, 0), ar = coef(manaus_ar))
+
+## Extract the residuals
+manaus_res &lt;- resid(manaus_ar) - mean(resid(manaus_ar))
+
+## Simulation function for simulating
+manaus_sim &lt;- function(res, n.sim, ran.args) {
+    # random generation of replicate series using arima.sim
+    rg1 &lt;- function(n, res) sample(res, n, replace = TRUE)
+    ts.orig &lt;- ran.args$ts
+    ts.mod &lt;- ran.args$model
+    mean(ts.orig) + ts(arima.sim(model = ts.mod, n = n.sim, rand.gen = rg1, 
+        res = as.vector(res)))
+}</code></pre>
+<p>Once we’ve setup the time-series simulation framework, we can once again use the <code>tsboot</code> function with a few added arguments.</p>
+<pre class="r"><code>manaus_model &lt;- tsboot(manaus_res, manaus_fun, R = num_resamples, sim = &quot;model&quot;, 
+    n.sim = length(manaus), orig.t = FALSE, ran.gen = manaus_sim, ran.args = list(ts = manaus, 
+        model = manaus_mod))</code></pre>
+</div>
+</div>
+<div id="analyzing-the-results" class="section level1">
+<h1>Analyzing the results</h1>
+<p>So we’ve bootstrapped the <code>manaus</code> data three different ways to get an idea for the variability in AR model order (p). Let’s take a look at some of our simulated data first.</p>
+<pre class="r"><code>recording_dates &lt;- expand.grid(seq(1, 12), seq(1903, 1992))
+recording_dates &lt;- paste0(&quot;1/&quot;, recording_dates$Var1, &quot;/&quot;, recording_dates$Var2)
+
+samp_data &lt;- data_frame(time = dmy(recording_dates), true = c(manaus), fixed = manaus_fixed$t[1, 
+    -c(1, 2)], stationary = manaus_geom$t[1, -c(1, 2)], model_based = manaus_model$t[1, 
+    -c(1, 2)])
+
+samp_data %&gt;% gather(key, value, true:model_based) %&gt;% ggplot(aes(time, value)) + 
+    geom_line() + facet_wrap(~key)</code></pre>
+<p><img src="https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>The data look very similar to the true data, and if we didn’t know which was true, we probably wouldn’t be able to tell the difference between them, which is exactly what we’d like. Now let’s take a look at the distributions for the order parameter of the AR model.</p>
+<pre class="r"><code>p_dists &lt;- data_frame(fixed = manaus_fixed$t[, 1], stationary = manaus_geom$t[, 
+    1], model_based = manaus_model$t[, 1])
+
+p_dists %&gt;% gather(key, value, fixed:model_based) %&gt;% ggplot(aes(value)) + geom_histogram(bins = 15) + 
+    facet_wrap(~key, nrow = 3)</code></pre>
+<p><img src="https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Looks like the stationary and fixed methods give similar distributions for the order of the autoregressive model, but the model-based distribution is slightly larger. The best fit model to the original data have an order of 4, so you can see that the model-based method for resampling maintains that level of dependence between the data. However, the stationary and fixed methods reduce the dependence between the data slightly (by combining chunks of the time series at random), so the best fit order for the AR models is reduced. Overall, the model-based method appears to work best in this scenario (though there is an increased risk of model misspecification), and we get a confidence interval from 3 to 5 for the order of the model.</p>
+</div>
+
+
+  
+<div class="prev-next-post pure-g">
+  <div class="pure-u-1-24" style="text-align: left;">
+    
+  </div>
+  <div class="pure-u-10-24">
+    
+  </div>
+  <div class="pure-u-2-24">
+    &nbsp;
+  </div>
+  <div class="pure-u-10-24">
+    
+  </div>
+  <div class="pure-u-1-24" style="text-align: right;">
+    
+  </div>
+</div>
+
+
+
+  
+
+</div>
+
+</div>
+</div>
+<script src="https://sjfox.github.io/js/ui.js"></script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-74135701-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</body>
+</html>
+
