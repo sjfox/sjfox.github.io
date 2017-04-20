@@ -2,20 +2,29 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Fox and the flu</title>
-    <link>https://sjfox.github.io/post/index.xml</link>
+    <link>/post/index.xml</link>
     <description>Recent content in Posts on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <lastBuildDate>Sat, 23 Jul 2016 21:13:14 -0500</lastBuildDate>
-    <atom:link href="https://sjfox.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 Apr 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Time steps, lsoda, and epidemiological models</title>
+      <link>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
+      <pubDate>Wed, 19 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Bootstrapping Time Series Data</title>
-      <link>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</link>
+      <link>/post/2015-07-23-r-rmarkdown/</link>
       <pubDate>Sat, 23 Jul 2016 21:13:14 -0500</pubDate>
       
-      <guid>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</guid>
+      <guid>/post/2015-07-23-r-rmarkdown/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;This demonstration is part of a requirement for my statistical consulting class at UT Austin. I will go through the basics of bootstrapping time series data using three different resampling methods.&lt;/p&gt;
@@ -39,7 +48,7 @@ library(lubridate)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We will be investigating the Rio Negro river level in the &lt;code&gt;manaus&lt;/code&gt; dataset. We are interested in developing an AR(p) model to describe the river level through time. However, we are not interested in selecting the &lt;code&gt;p&lt;/code&gt; that is the best for the data, but rather understanding the full distribution of &lt;code&gt;p&lt;/code&gt; for these data, which is where the bootstrapping will come into play.&lt;/p&gt;
 &lt;p&gt;Always a good idea to see what your data look like first:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(manaus)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;creating-a-function-for-obtaining-a-test-statistic&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Creating a function for obtaining a test statistic&lt;/h1&gt;
@@ -112,14 +121,14 @@ samp_data &amp;lt;- data_frame(time = dmy(recording_dates), true = c(manaus), fi
 
 samp_data %&amp;gt;% gather(key, value, true:model_based) %&amp;gt;% ggplot(aes(time, value)) + 
     geom_line() + facet_wrap(~key)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The data look very similar to the true data, and if we didn’t know which was true, we probably wouldn’t be able to tell the difference between them, which is exactly what we’d like. Now let’s take a look at the distributions for the order parameter of the AR model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_dists &amp;lt;- data_frame(fixed = manaus_fixed$t[, 1], stationary = manaus_geom$t[, 
     1], model_based = manaus_model$t[, 1])
 
 p_dists %&amp;gt;% gather(key, value, fixed:model_based) %&amp;gt;% ggplot(aes(value)) + geom_histogram(bins = 15) + 
     facet_wrap(~key, nrow = 3)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Looks like the stationary and fixed methods give similar distributions for the order of the autoregressive model, but the model-based distribution is slightly larger. The best fit model to the original data have an order of 4, so you can see that the model-based method for resampling maintains that level of dependence between the data. However, the stationary and fixed methods reduce the dependence between the data slightly (by combining chunks of the time series at random), so the best fit order for the AR models is reduced. Overall, the model-based method appears to work best in this scenario (though there is an increased risk of model misspecification), and we get a confidence interval from 3 to 5 for the order of the model.&lt;/p&gt;
 &lt;/div&gt;
 </description>

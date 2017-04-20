@@ -2,47 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://sjfox.github.io/about/</loc>
+    <loc>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</loc>
+    <lastmod>2017-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/</loc>
     <lastmod>2017-03-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</loc>
+    <loc>/post/2015-07-23-r-rmarkdown/</loc>
     <lastmod>2016-07-23T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://sjfox.github.io/tags/bootstrap/</loc>
-    <lastmod>2016-07-23T21:13:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://sjfox.github.io/</loc>
-    <lastmod>2017-03-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://sjfox.github.io/post/</loc>
+    <loc>/tags/bootstrap/</loc>
     <lastmod>2016-07-23T21:13:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://sjfox.github.io/tags/r-markdown/</loc>
+    <loc>/</loc>
+    <lastmod>2017-04-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2017-04-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/r-markdown/</loc>
     <lastmod>2016-07-23T21:13:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://sjfox.github.io/tags/stats/</loc>
+    <loc>/tags/stats/</loc>
     <lastmod>2016-07-23T21:13:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://sjfox.github.io/tags/</loc>
+    <loc>/tags/</loc>
     <priority>0</priority>
   </url>
   
