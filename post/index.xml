@@ -48,7 +48,7 @@ run_sir &amp;lt;- function(init_states, times, params, sir_func) {
 &lt;/div&gt;
 &lt;div id=&#34;single-run&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Single run&lt;/h2&gt;
-&lt;p&gt;Now let’s initialize and run a model. We will use the &lt;code&gt;deSolve&lt;/code&gt; package for running the ODEs, the &lt;code&gt;tidyverse&lt;/code&gt; to handle data manipulations, and &lt;code&gt;cowplot&lt;/code&gt;/&lt;code&gt;ggplot2&lt;/code&gt; for visualizing. We will run the model with &lt;span class=&#34;math inline&#34;&gt;\(\beta=0.5\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\gamma=0.25\)&lt;/span&gt;, so the disease will have an &lt;span class=&#34;math inline&#34;&gt;\(R_0 = \frac{\beta}{\gamma}=2\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Now let’s initialize and run a model. We will use the &lt;code&gt;deSolve&lt;/code&gt; package for running the ODEs, the &lt;code&gt;tidyverse&lt;/code&gt; to handle data manipulations, and &lt;code&gt;cowplot&lt;/code&gt;/&lt;code&gt;ggplot2&lt;/code&gt; for visualizing. We will run the model with &lt;code&gt;beta=0.5&lt;/code&gt; and &lt;code&gt;gamma=0.25&lt;/code&gt;, so the disease will have an &lt;code&gt;R0 = beta/gamma=2&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(deSolve)
 library(tidyverse)
 library(cowplot)

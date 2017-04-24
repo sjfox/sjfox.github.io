@@ -264,7 +264,7 @@ run_sir &lt;- function(init_states, times, params, sir_func) {
 </div>
 <div id="single-run" class="section level2">
 <h2>Single run</h2>
-<p>Now let’s initialize and run a model. We will use the <code>deSolve</code> package for running the ODEs, the <code>tidyverse</code> to handle data manipulations, and <code>cowplot</code>/<code>ggplot2</code> for visualizing. We will run the model with <span class="math inline">\(\beta=0.5\)</span> and <span class="math inline">\(\gamma=0.25\)</span>, so the disease will have an <span class="math inline">\(R_0 = \frac{\beta}{\gamma}=2\)</span>.</p>
+<p>Now let’s initialize and run a model. We will use the <code>deSolve</code> package for running the ODEs, the <code>tidyverse</code> to handle data manipulations, and <code>cowplot</code>/<code>ggplot2</code> for visualizing. We will run the model with <code>beta=0.5</code> and <code>gamma=0.25</code>, so the disease will have an <code>R0 = beta/gamma=2</code>.</p>
 <pre class="r"><code>library(deSolve)
 library(tidyverse)
 library(cowplot)
