@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.19" />
 
-  <title>Time steps, lsoda, and epidemiological models &middot; Fox and the flu</title>
+  <title>Simple trick to speed up ODE integration in R &middot; Fox and the flu</title>
 
   
   
@@ -21,13 +21,13 @@
   <!--<![endif]-->
 
   <!--[if lte IE 8]>
-  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="/css/side-menu.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="/css/blackburn.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
 
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -44,7 +44,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
 
   
   
@@ -63,7 +63,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="/">Blackburn</a>
+  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Blackburn</a>
 
 
   <div class="pure-menu">
@@ -71,19 +71,19 @@
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
       
         </li>
       
@@ -196,7 +196,7 @@
 
 
 <div class="header">
-  <h1>Time steps, lsoda, and epidemiological models</h1>
+  <h1>Simple trick to speed up ODE integration in R</h1>
   <h2></h2>
 </div>
 <div class="content">
@@ -205,7 +205,7 @@
 
   <div>
     <i class="fa fa-calendar fa-fw"></i>
-    <time>19 Apr 2017, 00:00</time>
+    <time>24 Apr 2017, 00:00</time>
   </div>
 
   
@@ -213,22 +213,121 @@
   
 
   
+  
+  
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/stats">stats</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/lsoda">lsoda</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/ode">ode</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/fitting">fitting</a>
+    
+  </div>
+  
+  
 
 </div>
 
-  
+  <div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the <code>R</code> environment and write <code>CSnippets</code> for the <code>pomp</code> package (more on this in a later blog), or to use <code>RCpp</code>, but I used the <code>profvis</code> package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.</p>
+</div>
+<div id="the-model" class="section level2">
+<h2>The model</h2>
+<p>Let’s start by making a simple SIR model. This model has susceptible, infectious, and recovered individuals, and the ode will follow the number of individuals in each class over the course of the epidemic. <code>beta</code> and <code>gamma</code> will be parameters governing the transmission and recovery rates of the individuals. We’ll make two forms of the model: one that is more legible and utilizes the <code>with</code> function, and another one that is slightly less legible but accesses the vectors directly. I’ll also create a function that can run either of the different models, and return a dataframe as a result.</p>
+<pre class="r"><code>sir_simple &lt;- function(t, x, params) {
+    with(c(as.list(params), as.list(x)), {
+        dS &lt;- -beta * S * I
+        dI &lt;- beta * S * I - gamma * I
+        dR &lt;- gamma * I
+        dx &lt;- c(dS, dI, dR)
+        list(dx)
+    })
+}
+
+sir &lt;- function(t, x, params) {
+    dS &lt;- -params[&quot;beta&quot;] * x[&quot;S&quot;] * x[&quot;I&quot;]
+    dI &lt;- params[&quot;beta&quot;] * x[&quot;S&quot;] * x[&quot;I&quot;] - params[&quot;gamma&quot;] * x[&quot;I&quot;]
+    dR &lt;- params[&quot;gamma&quot;] * x[&quot;I&quot;]
+    dx &lt;- c(dS, dI, dR)
+    list(dx)
+}
+
+
+run_sir &lt;- function(init_states, times, params, sir_func) {
+    as.data.frame(lsoda(y = init_states, times = times, func = sir_func, parms = params))
+}</code></pre>
+</div>
+<div id="single-run" class="section level2">
+<h2>Single run</h2>
+<p>Now let’s initialize and run a model. We will use the <code>deSolve</code> package for running the ODEs, the <code>tidyverse</code> to handle data manipulations, and <code>cowplot</code>/<code>ggplot2</code> for visualizing. We will run the model with <span class="math inline">\(\beta=0.5\)</span> and <span class="math inline">\(\gamma=0.25\)</span>, so the disease will have an <span class="math inline">\(R_0 = \frac{\beta}{\gamma}=2\)</span>.</p>
+<pre class="r"><code>library(deSolve)
+library(tidyverse)
+library(cowplot)
+
+times &lt;- seq(0, 100, by = 1)
+params &lt;- c(beta = 0.5, gamma = 0.25)
+init_states &lt;- c(S = 9999/10000, I = 1/10000, R = 0/10000)
+
+epi_dat &lt;- run_sir(init_states, times, params, sir_simple)
+
+epi_dat %&gt;% head()</code></pre>
+<pre><code>##   time         S            I            R
+## 1    0 0.9999000 0.0001000000 0.000000e+00
+## 2    1 0.9998429 0.0001285559 2.856343e-05
+## 3    2 0.9997695 0.0001652465 6.526861e-05
+## 4    3 0.9996752 0.0002123925 1.124413e-04
+## 5    4 0.9995548 0.0002725541 1.726493e-04
+## 6    5 0.9994000 0.0003499144 2.500909e-04</code></pre>
+<pre class="r"><code>epi_dat %&gt;% gather(state, value, S:R) %&gt;% ggplot(aes(time, value, color = state)) + 
+    geom_line(size = 1)</code></pre>
+<p><img src="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png" width="672" /></p>
+<p>Let’s also confirm that both models give the same result.</p>
+<pre class="r"><code>epi_dat_base &lt;- run_sir(init_states, times, params, sir)
+
+all_equal(epi_dat, epi_dat_base)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="comparing-the-two-models" class="section level2">
+<h2>Comparing the two models</h2>
+<p>This model is extremely simplistic and runs very quickly on my machine, but let’s use the <code>microbenchmark</code> package to compare the run times of the two different models.</p>
+<pre class="r"><code>library(microbenchmark)
+benchmark_std &lt;- microbenchmark(more_readable = run_sir(init_states, times, 
+    params, sir_simple), not_readable = run_sir(init_states, times, params, 
+    sir), times = 100)
+summary(benchmark_std)</code></pre>
+<pre><code>##            expr      min       lq     mean   median       uq      max
+## 1 more_readable 5.326989 6.094288 7.564684 6.522981 7.230016 66.76668
+## 2  not_readable 3.222771 3.545130 4.183180 3.869331 4.382511 10.11805
+##   neval
+## 1   100
+## 2   100</code></pre>
+<pre class="r"><code>autoplot(benchmark_std) + scale_y_continuous(trans = &quot;identity&quot;)</code></pre>
+<p><img src="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png" width="672" /></p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>Looking at the results the model without using the <code>with</code> statement runs about twice as fast as using the <code>with</code> statement. This may not seem like a big enough of a difference to matter, but shaving off seconds from the ODE simulation can reap large speed benefits when you are using fitting procedures which run many simulations to optimize parameters. The model I was fitting was much more complex, and I received an order of magnitude speed increase by removing the <code>with</code> statement from the ODE – I think I received a larger effect than the simple SIR model here, because I had many more parameters, and had other outside function calls within the ODE, though I’m not sure which one contributed stronger to the effect.</p>
+<p>This is a simple change to the model that can help shave off some time, so I would recommend trying it out with your simulations and see how much (if at all) it speeds things up. That being said, it’s always a tradeoff between code readability and speed, so if you’re not running into time issues you may want to stick with the more readable version using <code>with</code>.</p>
+<p>Do you have any other speedup tips for running and fitting ODEs in R or any questions about what I’ve done here? Would love to hear from you, so send me a message <a href="https://twitter.com/foxandtheflu">@foxandtheflu</a>.</p>
+</div>
+
 
   
 <div class="prev-next-post pure-g">
   <div class="pure-u-1-24" style="text-align: left;">
     
-    <a href="/post/2015-07-23-r-rmarkdown/"><i class="fa fa-chevron-left"></i></a>
+    <a href="https://sjfox.github.io/post/2015-07-23-r-rmarkdown/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
   <div class="pure-u-10-24">
     
     <nav class="prev">
-      <a href="/post/2015-07-23-r-rmarkdown/">Bootstrapping Time Series Data</a>
+      <a href="https://sjfox.github.io/post/2015-07-23-r-rmarkdown/">Bootstrapping Time Series Data</a>
     </nav>
     
   </div>
@@ -251,7 +350,7 @@
 
 </div>
 </div>
-<script src="/js/ui.js"></script>
+<script src="https://sjfox.github.io/js/ui.js"></script>
 
 
 <script>

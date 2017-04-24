@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.19" />
 
-  <title>Stats &middot; Fox and the flu</title>
+  <title>Time steps, lsoda, and epidemiological models &middot; Fox and the flu</title>
 
   
   
@@ -21,13 +21,13 @@
   <!--<![endif]-->
 
   <!--[if lte IE 8]>
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
+  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
+  <link rel="stylesheet" href="/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
+  <link rel="stylesheet" href="/css/blackburn.css">
 
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -37,8 +37,6 @@
 
   
   
-  <link rel="alternate" type="application/rss+xml" title="Fox and the flu" href="https://sjfox.github.io/tags/stats/index.xml" />
-  
 
   
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/androidstudio.min.css">
@@ -46,7 +44,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 
   
   
@@ -65,7 +63,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Blackburn</a>
+  <a class="pure-menu-heading brand" href="/">Blackburn</a>
 
 
   <div class="pure-menu">
@@ -73,19 +71,19 @@
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
+          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
+          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
       
         </li>
       
@@ -198,16 +196,12 @@
 
 
 <div class="header">
-  <h1>Stats</h1>
+  <h1>Time steps, lsoda, and epidemiological models</h1>
+  <h2></h2>
 </div>
-
 <div class="content">
-  
-    <article>
-  <header>
-    <h2><a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Simple trick to speed up ODE integration in R</a></h2>
 
-    <div class="post-meta">
+  <div class="post-meta">
 
   <div>
     <i class="fa fa-calendar fa-fw"></i>
@@ -219,92 +213,51 @@
   
 
   
+
+</div>
+
   
+
   
-  <div>
-    <i class="fa fa-tags fa-fw"></i>
+<div class="prev-next-post pure-g">
+  <div class="pure-u-1-24" style="text-align: left;">
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/stats">stats</a>&nbsp;&#47;
-    
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/lsoda">lsoda</a>&nbsp;&#47;
-    
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/ode">ode</a>&nbsp;&#47;
-    
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/fitting">fitting</a>
+    <a href="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
-  
-  
-
-</div>
-
-  </header>
-
-  <p>
-  Introduction I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the R environment and write CSnippets for the pomp package (more on this in a later blog), or to use RCpp, but I used the profvis package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.
-  </p>
-
-  
-  <footer>
-    <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Read more<i class="fa fa-angle-double-right fa-fw"></i></a>
-  </footer>
-  
-</article>
-
-  
-    <article>
-  <header>
-    <h2><a href="https://sjfox.github.io/post/2015-07-23-r-rmarkdown/">Bootstrapping Time Series Data</a></h2>
-
-    <div class="post-meta">
-
-  <div>
-    <i class="fa fa-calendar fa-fw"></i>
-    <time>23 Jul 2016, 21:13</time>
-  </div>
-
-  
-
-  
-
-  
-  
-  
-  <div>
-    <i class="fa fa-tags fa-fw"></i>
+  <div class="pure-u-10-24">
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/r-markdown">R Markdown</a>&nbsp;&#47;
-    
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/stats">stats</a>&nbsp;&#47;
-    
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/bootstrap">bootstrap</a>
+    <nav class="prev">
+      <a href="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Time steps, lsoda, and epidemiological models</a>
+    </nav>
     
   </div>
-  
+  <div class="pure-u-2-24">
+    &nbsp;
+  </div>
+  <div class="pure-u-10-24">
+    
+    <nav class="next">
+      <a href="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Time steps, lsoda, and epidemiological models</a>
+    </nav>
+    
+  </div>
+  <div class="pure-u-1-24" style="text-align: right;">
+    
+    <a href="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/"><i class="fa fa-chevron-right"></i></a>
+    
+  </div>
+</div>
+
+
+
   
 
 </div>
 
-  </header>
-
-  <p>
-  Introduction This demonstration is part of a requirement for my statistical consulting class at UT Austin. I will go through the basics of bootstrapping time series data using three different resampling methods.
-Fixed Block Sampling Stationary Block Sampling Model-based resampling   Packages Used For this demonstration I will use the following packages: The boot package is the workhorse behind the bootstrapping methods, but the forecast method is used for the time series modeling.
-  </p>
-
-  
-  <footer>
-    <a href="https://sjfox.github.io/post/2015-07-23-r-rmarkdown/">Read more<i class="fa fa-angle-double-right fa-fw"></i></a>
-  </footer>
-  
-</article>
-
-  
-</div>
-
 </div>
 </div>
-<script src="https://sjfox.github.io/js/ui.js"></script>
+<script src="/js/ui.js"></script>
 
 
 <script>
@@ -322,3 +275,4 @@ Fixed Block Sampling Stationary Block Sampling Model-based resampling   Packages
 
 </body>
 </html>
+

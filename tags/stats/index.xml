@@ -2,19 +2,111 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stats on Fox and the flu</title>
-    <link>/tags/stats/index.xml</link>
+    <link>https://sjfox.github.io/tags/stats/index.xml</link>
     <description>Recent content in Stats on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <atom:link href="/tags/stats/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sjfox.github.io/tags/stats/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Simple trick to speed up ODE integration in R</title>
+      <link>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
+      <description>&lt;div id=&#34;introduction&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the &lt;code&gt;R&lt;/code&gt; environment and write &lt;code&gt;CSnippets&lt;/code&gt; for the &lt;code&gt;pomp&lt;/code&gt; package (more on this in a later blog), or to use &lt;code&gt;RCpp&lt;/code&gt;, but I used the &lt;code&gt;profvis&lt;/code&gt; package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;the-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;The model&lt;/h2&gt;
+&lt;p&gt;Let’s start by making a simple SIR model. This model has susceptible, infectious, and recovered individuals, and the ode will follow the number of individuals in each class over the course of the epidemic. &lt;code&gt;beta&lt;/code&gt; and &lt;code&gt;gamma&lt;/code&gt; will be parameters governing the transmission and recovery rates of the individuals. We’ll make two forms of the model: one that is more legible and utilizes the &lt;code&gt;with&lt;/code&gt; function, and another one that is slightly less legible but accesses the vectors directly. I’ll also create a function that can run either of the different models, and return a dataframe as a result.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sir_simple &amp;lt;- function(t, x, params) {
+    with(c(as.list(params), as.list(x)), {
+        dS &amp;lt;- -beta * S * I
+        dI &amp;lt;- beta * S * I - gamma * I
+        dR &amp;lt;- gamma * I
+        dx &amp;lt;- c(dS, dI, dR)
+        list(dx)
+    })
+}
+
+sir &amp;lt;- function(t, x, params) {
+    dS &amp;lt;- -params[&amp;quot;beta&amp;quot;] * x[&amp;quot;S&amp;quot;] * x[&amp;quot;I&amp;quot;]
+    dI &amp;lt;- params[&amp;quot;beta&amp;quot;] * x[&amp;quot;S&amp;quot;] * x[&amp;quot;I&amp;quot;] - params[&amp;quot;gamma&amp;quot;] * x[&amp;quot;I&amp;quot;]
+    dR &amp;lt;- params[&amp;quot;gamma&amp;quot;] * x[&amp;quot;I&amp;quot;]
+    dx &amp;lt;- c(dS, dI, dR)
+    list(dx)
+}
+
+
+run_sir &amp;lt;- function(init_states, times, params, sir_func) {
+    as.data.frame(lsoda(y = init_states, times = times, func = sir_func, parms = params))
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;single-run&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Single run&lt;/h2&gt;
+&lt;p&gt;Now let’s initialize and run a model. We will use the &lt;code&gt;deSolve&lt;/code&gt; package for running the ODEs, the &lt;code&gt;tidyverse&lt;/code&gt; to handle data manipulations, and &lt;code&gt;cowplot&lt;/code&gt;/&lt;code&gt;ggplot2&lt;/code&gt; for visualizing. We will run the model with &lt;span class=&#34;math inline&#34;&gt;\(\beta=0.5\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\gamma=0.25\)&lt;/span&gt;, so the disease will have an &lt;span class=&#34;math inline&#34;&gt;\(R_0 = \frac{\beta}{\gamma}=2\)&lt;/span&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(deSolve)
+library(tidyverse)
+library(cowplot)
+
+times &amp;lt;- seq(0, 100, by = 1)
+params &amp;lt;- c(beta = 0.5, gamma = 0.25)
+init_states &amp;lt;- c(S = 9999/10000, I = 1/10000, R = 0/10000)
+
+epi_dat &amp;lt;- run_sir(init_states, times, params, sir_simple)
+
+epi_dat %&amp;gt;% head()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   time         S            I            R
+## 1    0 0.9999000 0.0001000000 0.000000e+00
+## 2    1 0.9998429 0.0001285559 2.856343e-05
+## 3    2 0.9997695 0.0001652465 6.526861e-05
+## 4    3 0.9996752 0.0002123925 1.124413e-04
+## 5    4 0.9995548 0.0002725541 1.726493e-04
+## 6    5 0.9994000 0.0003499144 2.500909e-04&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat %&amp;gt;% gather(state, value, S:R) %&amp;gt;% ggplot(aes(time, value, color = state)) + 
+    geom_line(size = 1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Let’s also confirm that both models give the same result.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat_base &amp;lt;- run_sir(init_states, times, params, sir)
+
+all_equal(epi_dat, epi_dat_base)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;comparing-the-two-models&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Comparing the two models&lt;/h2&gt;
+&lt;p&gt;This model is extremely simplistic and runs very quickly on my machine, but let’s use the &lt;code&gt;microbenchmark&lt;/code&gt; package to compare the run times of the two different models.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(microbenchmark)
+benchmark_std &amp;lt;- microbenchmark(more_readable = run_sir(init_states, times, 
+    params, sir_simple), not_readable = run_sir(init_states, times, params, 
+    sir), times = 100)
+summary(benchmark_std)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##            expr      min       lq     mean   median       uq      max
+## 1 more_readable 5.326989 6.094288 7.564684 6.522981 7.230016 66.76668
+## 2  not_readable 3.222771 3.545130 4.183180 3.869331 4.382511 10.11805
+##   neval
+## 1   100
+## 2   100&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;autoplot(benchmark_std) + scale_y_continuous(trans = &amp;quot;identity&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;Looking at the results the model without using the &lt;code&gt;with&lt;/code&gt; statement runs about twice as fast as using the &lt;code&gt;with&lt;/code&gt; statement. This may not seem like a big enough of a difference to matter, but shaving off seconds from the ODE simulation can reap large speed benefits when you are using fitting procedures which run many simulations to optimize parameters. The model I was fitting was much more complex, and I received an order of magnitude speed increase by removing the &lt;code&gt;with&lt;/code&gt; statement from the ODE – I think I received a larger effect than the simple SIR model here, because I had many more parameters, and had other outside function calls within the ODE, though I’m not sure which one contributed stronger to the effect.&lt;/p&gt;
+&lt;p&gt;This is a simple change to the model that can help shave off some time, so I would recommend trying it out with your simulations and see how much (if at all) it speeds things up. That being said, it’s always a tradeoff between code readability and speed, so if you’re not running into time issues you may want to stick with the more readable version using &lt;code&gt;with&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Do you have any other speedup tips for running and fitting ODEs in R or any questions about what I’ve done here? Would love to hear from you, so send me a message &lt;a href=&#34;https://twitter.com/foxandtheflu&#34;&gt;@foxandtheflu&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Bootstrapping Time Series Data</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
+      <link>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</link>
       <pubDate>Sat, 23 Jul 2016 21:13:14 -0500</pubDate>
       
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
+      <guid>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;This demonstration is part of a requirement for my statistical consulting class at UT Austin. I will go through the basics of bootstrapping time series data using three different resampling methods.&lt;/p&gt;
@@ -38,7 +130,7 @@ library(lubridate)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We will be investigating the Rio Negro river level in the &lt;code&gt;manaus&lt;/code&gt; dataset. We are interested in developing an AR(p) model to describe the river level through time. However, we are not interested in selecting the &lt;code&gt;p&lt;/code&gt; that is the best for the data, but rather understanding the full distribution of &lt;code&gt;p&lt;/code&gt; for these data, which is where the bootstrapping will come into play.&lt;/p&gt;
 &lt;p&gt;Always a good idea to see what your data look like first:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(manaus)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;creating-a-function-for-obtaining-a-test-statistic&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Creating a function for obtaining a test statistic&lt;/h1&gt;
@@ -111,14 +203,14 @@ samp_data &amp;lt;- data_frame(time = dmy(recording_dates), true = c(manaus), fi
 
 samp_data %&amp;gt;% gather(key, value, true:model_based) %&amp;gt;% ggplot(aes(time, value)) + 
     geom_line() + facet_wrap(~key)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The data look very similar to the true data, and if we didn’t know which was true, we probably wouldn’t be able to tell the difference between them, which is exactly what we’d like. Now let’s take a look at the distributions for the order parameter of the AR model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_dists &amp;lt;- data_frame(fixed = manaus_fixed$t[, 1], stationary = manaus_geom$t[, 
     1], model_based = manaus_model$t[, 1])
 
 p_dists %&amp;gt;% gather(key, value, fixed:model_based) %&amp;gt;% ggplot(aes(value)) + geom_histogram(bins = 15) + 
     facet_wrap(~key, nrow = 3)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Looks like the stationary and fixed methods give similar distributions for the order of the autoregressive model, but the model-based distribution is slightly larger. The best fit model to the original data have an order of 4, so you can see that the model-based method for resampling maintains that level of dependence between the data. However, the stationary and fixed methods reduce the dependence between the data slightly (by combining chunks of the time series at random), so the best fit order for the AR models is reduced. Overall, the model-based method appears to work best in this scenario (though there is an increased risk of model misspecification), and we get a confidence interval from 3 to 5 for the order of the model.&lt;/p&gt;
 &lt;/div&gt;
 </description>

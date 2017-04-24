@@ -21,13 +21,13 @@
   <!--<![endif]-->
 
   <!--[if lte IE 8]>
-  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="/css/side-menu.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="/css/blackburn.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
 
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -44,7 +44,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
 
   
   
@@ -63,7 +63,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="/">Blackburn</a>
+  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Blackburn</a>
 
 
   <div class="pure-menu">
@@ -71,19 +71,19 @@
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
       
         </li>
       
@@ -218,11 +218,11 @@
   <div>
     <i class="fa fa-tags fa-fw"></i>
     
-      <a class="post-taxonomy-tag" href="/tags/r-markdown">R Markdown</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/r-markdown">R Markdown</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="/tags/stats">stats</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/stats">stats</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="/tags/bootstrap">bootstrap</a>
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/bootstrap">bootstrap</a>
     
   </div>
   
@@ -253,7 +253,7 @@ library(lubridate)</code></pre>
 <p>We will be investigating the Rio Negro river level in the <code>manaus</code> dataset. We are interested in developing an AR(p) model to describe the river level through time. However, we are not interested in selecting the <code>p</code> that is the best for the data, but rather understanding the full distribution of <code>p</code> for these data, which is where the bootstrapping will come into play.</p>
 <p>Always a good idea to see what your data look like first:</p>
 <pre class="r"><code>plot(manaus)</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </div>
 <div id="creating-a-function-for-obtaining-a-test-statistic" class="section level1">
 <h1>Creating a function for obtaining a test statistic</h1>
@@ -326,14 +326,14 @@ samp_data &lt;- data_frame(time = dmy(recording_dates), true = c(manaus), fixed 
 
 samp_data %&gt;% gather(key, value, true:model_based) %&gt;% ggplot(aes(time, value)) + 
     geom_line() + facet_wrap(~key)</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>The data look very similar to the true data, and if we didn’t know which was true, we probably wouldn’t be able to tell the difference between them, which is exactly what we’d like. Now let’s take a look at the distributions for the order parameter of the AR model.</p>
 <pre class="r"><code>p_dists &lt;- data_frame(fixed = manaus_fixed$t[, 1], stationary = manaus_geom$t[, 
     1], model_based = manaus_model$t[, 1])
 
 p_dists %&gt;% gather(key, value, fixed:model_based) %&gt;% ggplot(aes(value)) + geom_histogram(bins = 15) + 
     facet_wrap(~key, nrow = 3)</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Looks like the stationary and fixed methods give similar distributions for the order of the autoregressive model, but the model-based distribution is slightly larger. The best fit model to the original data have an order of 4, so you can see that the model-based method for resampling maintains that level of dependence between the data. However, the stationary and fixed methods reduce the dependence between the data slightly (by combining chunks of the time series at random), so the best fit order for the AR models is reduced. Overall, the model-based method appears to work best in this scenario (though there is an increased risk of model misspecification), and we get a confidence interval from 3 to 5 for the order of the model.</p>
 </div>
 
@@ -352,13 +352,13 @@ p_dists %&gt;% gather(key, value, fixed:model_based) %&gt;% ggplot(aes(value)) +
   <div class="pure-u-10-24">
     
     <nav class="next">
-      <a href="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Time steps, lsoda, and epidemiological models</a>
+      <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Simple trick to speed up ODE integration in R</a>
     </nav>
     
   </div>
   <div class="pure-u-1-24" style="text-align: right;">
     
-    <a href="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/"><i class="fa fa-chevron-right"></i></a>
+    <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/"><i class="fa fa-chevron-right"></i></a>
     
   </div>
 </div>
@@ -371,7 +371,7 @@ p_dists %&gt;% gather(key, value, fixed:model_based) %&gt;% ggplot(aes(value)) +
 
 </div>
 </div>
-<script src="/js/ui.js"></script>
+<script src="https://sjfox.github.io/js/ui.js"></script>
 
 
 <script>

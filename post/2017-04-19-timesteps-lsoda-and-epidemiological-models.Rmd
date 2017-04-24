@@ -1,0 +1,98 @@
+---
+date: 2017-04-24
+description: ""
+title: Simple trick to speed up ODE integration in R
+categories: ["R"]
+tags: ["stats", "lsoda", "ode", "fitting"]
+draft: no
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, tidy = TRUE)
+set.seed(1)
+
+```
+
+## Introduction
+I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the `R` environment and write `CSnippets` for the `pomp` package (more on this in a later blog), or to use `RCpp`, but I used the `profvis` package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.
+
+
+## The model
+Let's start by making a simple SIR model. This model has susceptible, infectious, and recovered individuals, and the ode will follow the number of individuals in each class over the course of the epidemic. `beta` and `gamma` will be parameters governing the transmission and recovery rates of the individuals. We'll make two forms of the model: one that is more legible and utilizes the `with` function, and another one that is slightly less legible but accesses the vectors directly. I'll also create a function that can run either of the different models, and return a dataframe as a result.
+
+```{r sir_mod, cache=T}
+sir_simple <- function (t, x, params) {   
+  with(c(as.list(params), as.list(x)), 
+       {                                  
+         dS <- -beta*S*I
+         dI <- beta*S*I-gamma*I
+         dR <- gamma*I
+         dx <- c(dS,dI,dR)                
+         list(dx)     
+       })
+}
+
+sir <- function (t, x, params) {   
+  dS <- -params["beta"] * x["S"] * x["I"]
+  dI <- params["beta"] * x["S"] * x["I"] - params["gamma"] * x["I"]
+  dR <- params["gamma"] * x["I"]
+  dx <- c(dS,dI,dR)                
+  list(dx)     
+}
+
+
+run_sir <- function(init_states, times, params, sir_func){
+  as.data.frame(lsoda(y = init_states, times = times, func = sir_func, parms = params))
+}
+```
+
+## Single run
+Now let's initialize and run a model. We will use the `deSolve` package for running the ODEs, the `tidyverse` to handle data manipulations, and `cowplot`/`ggplot2` for visualizing. We will run the model with $\beta=0.5$ and $\gamma=0.25$, so the disease will have an $R_0 = \frac{\beta}{\gamma}=2$.
+
+```{r run_sim, cache=TRUE}
+library(deSolve)
+library(tidyverse)
+library(cowplot)
+
+times <- seq(0,100, by=1)
+params <- c(beta=.5, gamma= 0.25)
+init_states <- c(S=9999/10000,I=1/10000,R=0/10000)
+
+epi_dat <- run_sir(init_states, times, params, sir_simple)
+
+epi_dat %>% head()
+
+epi_dat %>% gather(state, value, S:R) %>%
+  ggplot(aes(time, value, color=state)) + 
+  geom_line(size=1)
+```
+
+Let's also confirm that both models give the same result.
+```{r run_other_sim, cache=TRUE}
+epi_dat_base <- run_sir(init_states, times, params, sir)
+
+all_equal(epi_dat, epi_dat_base)
+```
+
+## Comparing the two models
+This model is extremely simplistic and runs very quickly on my machine, but let's use the `microbenchmark` package to compare the run times of the two different models.
+
+```{r bechmarking, cache=TRUE}
+library(microbenchmark)
+benchmark_std <- microbenchmark(more_readable = run_sir(init_states, times, params, sir_simple),
+                                not_readable = run_sir(init_states, times, params, sir), times=100)
+summary(benchmark_std)
+
+autoplot(benchmark_std) + scale_y_continuous(trans="identity") 
+```
+
+## Conclusions
+Looking at the results the model without using the `with` statement runs about twice as fast as using the `with` statement. This may not seem like a big enough of a difference to matter, but shaving off seconds from the ODE simulation can reap large speed benefits when you are using fitting procedures which run many simulations to optimize parameters. The model I was fitting was much more complex, and I received an order of magnitude speed increase by removing the `with` statement from the ODE -- I think I received a larger effect than the simple SIR model here, because I had many more parameters, and had other outside function calls within the ODE, though I'm not sure which one contributed stronger to the effect. 
+
+This is a simple change to the model that can help shave off some time, so I would recommend trying it out with your simulations and see how much (if at all) it speeds things up. That being said, it's always a tradeoff between code readability and speed, so if you're not running into time issues you may want to stick with the more readable version using `with`.
+
+Do you have any other speedup tips for running and fitting ODEs in R or any questions about what I've done here? Would love to hear from you, so send me a message [\@foxandtheflu](https://twitter.com/foxandtheflu).
