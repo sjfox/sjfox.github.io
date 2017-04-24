@@ -51,7 +51,7 @@ run_sir <- function(init_states, times, params, sir_func){
 ```
 
 ## Single run
-Now let's initialize and run a model. We will use the `deSolve` package for running the ODEs, the `tidyverse` to handle data manipulations, and `cowplot`/`ggplot2` for visualizing. We will run the model with `beta=0.5` and `gamma=0.25`, so the disease will have an `R0 = beta/gamma=2`.
+Now let's initialize and run a model. We will use the `deSolve` package for running the ODEs, the `tidyverse` to handle data manipulations, and `cowplot`/`ggplot2` for visualizing. We will run the model with $\beta=0.5$ and $\gamma=0.25$, so the disease will have an $R_0 = \frac{\beta}{\gamma}=2$.
 
 ```{r run_sim, cache=TRUE}
 library(deSolve)
