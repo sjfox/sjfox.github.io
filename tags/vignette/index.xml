@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vignette on Fox and the flu</title>
+    <link>/tags/vignette/index.xml</link>
+    <description>Recent content in Vignette on Fox and the flu</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <atom:link href="/tags/vignette/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Introducting rtZIKVrisk</title>
+      <link>/post/2017-05-04-rtzikvrisk_primer/</link>
+      <pubDate>Thu, 04 May 2017 10:37:49 -0500</pubDate>
+      
+      <guid>/post/2017-05-04-rtzikvrisk_primer/</guid>
+      <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab’s recent Zika paper, &lt;a href=&#34;http://biorxiv.org/content/early/2016/06/07/056648&#34;&gt;Assessing Real-time Zika Risk in the United States&lt;/a&gt; (published today!). To get an idea of the content from that paper you can check out the blogpost at BMC Infectious Diseases. I’ve also given an introduction to the package on the &lt;a href=&#34;http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html&#34;&gt;rtZIKVrisk github&lt;/a&gt;. Here I wanted to talk a bit about some of the advantages of putting your papers into packages.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;why-turn-papers-into-packages&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Why turn papers into packages&lt;/h1&gt;
+&lt;div id=&#34;foster-open-science&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Foster open science&lt;/h2&gt;
+&lt;p&gt;I think this is one of the best reasons to turn a paper into a package. Making a package allows anyone to reproduce your results, see your code, and more fully understand your analysis. It also ensures that the necessary R and package versions are all documented. With a simple R command anyone can download &lt;code&gt;rtZIKVrisk&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    install.packages(&amp;quot;devtools&amp;quot;)
+    devtools::install_github(&amp;quot;sjfox/rtZIKVrisk&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;From there a few lines is all that it takes to recreate any of our figures,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    library(rtZIKVrisk)
+    plot_fig2()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;or begin simulating epidemics in Texas counties.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;  set.seed(808)
+  sim_parms &amp;lt;- zika_def_parms()
+  outbreak_sim &amp;lt;- run_n_zika_sims(num_reps = 100, sim_parms)
+  plot_final_sizes(outbreak_sim)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;  plot_zika_outbreaks(outbreak_sim)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I think this is really cool, but also realize that probably no one will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code &lt;code&gt;run_zika_sim()&lt;/code&gt;, and learn how to implement one for their own purposes. I know that I’ve learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;improve-your-coding&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Improve your coding&lt;/h2&gt;
+&lt;p&gt;We started this project in April of 2016 in a rush, trying to get the project pushed out in a couple of weeks (We succeeded in getting it on Biorxiv as a preprint, but it took over a year until its eventual publication). That meant that our project repository on github was (and still is) a mess. Collaborators all had their own scripts, and it was hard to keep track of all of the changes. Somewhere in between that first preprint and now, I turned that mess into the &lt;code&gt;rtZIKVrisk&lt;/code&gt; package, and it felt great.&lt;/p&gt;
+&lt;p&gt;The process made me think hard about the functions from those scripts that we were actually using and put them into a reasonable format that was organized. I broke the code up into data munging, simulation, analysis, and plotting functions, which could then be self contained pieces. I now know where to look for functions for each stage of the analysis, and can also see the documentation with the simple R search &lt;code&gt;?run_zika_sim&lt;/code&gt;. Overall, I was able to make a much more permanent location for the materials from the paper, and make it more accessible to myself and others in the future – knowing that others will see your code definitely helps force you to improve.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;get-people-interested-in-your-project&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Get people interested in your project&lt;/h2&gt;
+&lt;p&gt;Once you have your package framework in place, you sometimes think of interesting ideas not entirely related to your specific paper that might appeal to others. For example, I implemented some functionality to query our database of Texas county information, and run example outbreaks in a specific county. Here’s how I would do that in my hometown of Austin.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;travis_parms &amp;lt;- get_county_parms(&amp;quot;travis&amp;quot;)
+travis_sims &amp;lt;- run_n_zika_sims(num_reps = 1000, sim_parms)
+plot_final_sizes(travis_sims)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Plot the epidemic probablity as a function of reported cases based on simulations
+travis_epi_prob &amp;lt;- get_epidemic_prob_by_d(travis_sims, prev_threshold = 10, cum_threshold = 100)
+plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This was a cool feature that I thought (and still hope) that the people impacted by our study might be interested in seeing and exploring for themselves.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;easy-regeneration-of-figures&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Easy regeneration of figures&lt;/h2&gt;
+&lt;p&gt;All of the data contained within the figures comes along with the package in a self-contained way. That means that outputting the figures is quick, because you don’t need to regenerate the data (something I know &lt;a href=&#34;https://twitter.com/ClausWilke&#34;&gt;Claus Wilke&lt;/a&gt; has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the &lt;code&gt;save_plot()&lt;/code&gt; function from within &lt;code&gt;cowplot&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    plot_fig2(panels = &amp;quot;a&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;why-not-to-turn-papers-into-packages&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Why not to turn papers into packages&lt;/h1&gt;
+&lt;p&gt;Documenting and cleaning your code is always a pain, so I think there are some good reasons to not worry about putting things into a package.&lt;/p&gt;
+&lt;div id=&#34;your-analysis-isnt-self-contained-within-r&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Your analysis isn’t self-contained within R&lt;/h2&gt;
+&lt;p&gt;One of my other projects uses C++ to run simulations, and then I do the analysis in R. In my mind it’s not necessary to make an R package for simply the analysis scripts, because I would still need to document and share the C++ code elsewhere. I think for projects like that it makes more sense to have a github repository or something similar that can contain everything with a well documented README.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;you-have-a-single-self-contained-r-script&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;You have a single self-contained R script&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

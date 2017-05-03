@@ -1,0 +1,84 @@
+---
+date: 2017-05-04T10:37:49-05:00
+description: ""
+title: Introducting rtZIKVrisk
+draft: true
+tags: ["simulations", "zika", "vignette"]
+output:
+  html_document:
+    toc: true
+---
+
+# Introduction
+I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab's recent Zika paper, [Assessing Real-time Zika Risk in the United States](http://biorxiv.org/content/early/2016/06/07/056648) (published today!). To get an idea of the content from that paper you can check out the blogpost at BMC Infectious Diseases. I've also given an introduction to the package on the [rtZIKVrisk github](http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html). Here I wanted to talk a bit about some of the advantages of putting your papers into packages.
+
+# Why turn papers into packages
+
+## Foster open science
+
+I think this is one of the best reasons to turn a paper into a package. Making a package allows anyone to reproduce your results, see your code, and more fully understand your analysis. It also ensures that the necessary R and package versions are all documented. With a simple R command anyone can download `rtZIKVrisk`:
+
+```{r, eval=FALSE}
+    install.packages("devtools")
+    devtools::install_github("sjfox/rtZIKVrisk")
+```
+
+From there a few lines is all that it takes to recreate any of our figures,
+
+```{r, warning=FALSE, message=FALSE, comment=FALSE, fig.width=12, fig.height=5, out.width="700px", cache=TRUE}
+    library(rtZIKVrisk)
+    plot_fig2()
+```
+
+or begin simulating epidemics in Texas counties.
+
+```{r, fig.width=6, cache=TRUE}
+  set.seed(808)
+  sim_parms <- zika_def_parms()
+  outbreak_sim <- run_n_zika_sims(num_reps = 100, sim_parms)
+  plot_final_sizes(outbreak_sim)
+  plot_zika_outbreaks(outbreak_sim)
+```
+
+I think this is really cool, but also realize that probably no one will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code `run_zika_sim()`, and learn how to implement one for their own purposes. I know that I've learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.
+
+## Improve your coding
+We started this project in April of 2016 in a rush, trying to get the project pushed out in a couple of weeks (We succeeded in getting it on Biorxiv as a preprint, but it took over a year until its eventual publication). That meant that our project repository on github was (and still is) a mess. Collaborators all had their own scripts, and it was hard to keep track of all of the changes. Somewhere in between that first preprint and now, I turned that mess into the `rtZIKVrisk` package, and it felt great.
+
+The process made me think hard about the functions from those scripts that we were actually using and put them into a reasonable format that was organized. I broke the code up into data munging, simulation, analysis, and plotting functions, which could then be self contained pieces. I now know where to look for functions for each stage of the analysis, and can also see the documentation with the simple R search `?run_zika_sim`. Overall, I was able to make a much more permanent location for the materials from the paper, and make it more accessible to myself and others in the future -- knowing that others will see your code definitely helps force you to improve.  
+
+
+## Get people interested in your project
+Once you have your package framework in place, you sometimes think of interesting ideas not entirely related to your specific paper that might appeal to others. For example, I implemented some functionality to query our database of Texas county information, and run example outbreaks in a specific county. Here's how I would do that in my hometown of Austin.
+
+```{r, fig.width=6, cache=TRUE, warning=FALSE}
+travis_parms <- get_county_parms("travis")
+travis_sims <- run_n_zika_sims(num_reps = 1000, sim_parms)
+plot_final_sizes(travis_sims)
+
+# Plot the epidemic probablity as a function of reported cases based on simulations
+travis_epi_prob <- get_epidemic_prob_by_d(travis_sims, prev_threshold = 10, cum_threshold = 100)
+plot_epi_prob(travis_epi_prob)
+```
+
+This was a cool feature that I thought (and still hope) that the people impacted by our study might be interested in seeing and exploring for themselves.
+
+
+## Easy regeneration of figures
+All of the data contained within the figures comes along with the package in a self-contained way. That means that outputting the figures is quick, because you don't need to regenerate the data (something I know [Claus Wilke](https://twitter.com/ClausWilke) has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the `save_plot()` function from within `cowplot`.
+
+```{r, fig.width=5, fig.height=5, cache=TRUE}
+    plot_fig2(panels = "a")
+```
+
+
+# Why not to turn papers into packages
+Documenting and cleaning your code is always a pain, so I think there are some good reasons to not worry about putting things into a package.
+
+## Your analysis isn't self-contained within R
+One of my other projects uses C++ to run simulations, and then I do the analysis in R. In my mind it's not necessary to make an R package for simply the analysis scripts, because I would still need to document and share the C++ code elsewhere. I think for projects like that it makes more sense to have a github repository or something similar that can contain everything with a well documented README.
+
+## You have a single self-contained R script
+
+
+
