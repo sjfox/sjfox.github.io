@@ -1,22 +1,29 @@
 ---
-date: 2017-05-04T10:37:49-05:00
+date: 2017-05-10T10:37:49-05:00
 description: ""
-title: Introducting rtZIKVrisk
-draft: true
-tags: ["simulations", "zika", "vignette"]
+title: You should make an R package for your paper
+draft: false
+tags: ["r package", "rtZIKVrisk", "blog"]
 output:
   html_document:
     toc: true
 ---
 
 # Introduction
-I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab's recent Zika paper, [Assessing Real-time Zika Risk in the United States](http://biorxiv.org/content/early/2016/06/07/056648) (published today!). To get an idea of the content from that paper you can check out the blogpost at BMC Infectious Diseases. I've also given an introduction to the package on the [rtZIKVrisk github](http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html). Here I wanted to talk a bit about some of the advantages of putting your papers into packages.
+I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab's recent Zika paper, [Assessing Real-time Zika Risk in the United States](https://bmcinfectdis.biomedcentral.com/articles/10.1186/s12879-017-2394-9). If you're interested in learning about the content from that paper you can check out the blogpost hosted on the [BMC Infectious Diseases blog](https://blogs.biomedcentral.com/bmcseriesblog/2017/05/05/assessing-real-time-zika-risk-in-the-united-states/). I've also given an introduction to the package on the [rtZIKVrisk github](http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html). Here I wanted to talk a bit about some of the advantages of putting your papers into packages (both for yourself and other researchers).
 
-# Why turn papers into packages
+# What goes into an R package
+R packages are made up of three main things: (1) data, (2) functions, and (3) documentation. Combining them into a single, self-contained bundle, means that all of the computational work from a project can be found in one place, downloaded and installed simply, and then run with a freely availible software anyone can obtain. As an added bonus you can even add a vignette to the package, which you can use to illustrate example analyses or a sample pipeline.
+
+# Why you should turn papers into packages
+So aside from the obvious benefit, why should you, a scientist who has limited time consider turning your paper into an R package?
+
+## It doesn't take that much time
+I started with [Hilary Parker's introduction](https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/), and then looked at [Hadley Wickham's ](http://r-pkgs.had.co.nz/) more comprehensive book when I needed it. All-in-all, it took me about a solid day and a half to take my existing code and put it into the documented and fully functional package. In the scheme of things that's not that much time, and it gets quicker when you've done it once. I've reduced the time burden even further, because I've now started coding my current projects as R packages, so there's no need to convert everything over once it's finished (I haven't fully mastered this skill, though I'll likely write a blogpost about that later on).
 
 ## Foster open science
 
-I think this is one of the best reasons to turn a paper into a package. Making a package allows anyone to reproduce your results, see your code, and more fully understand your analysis. It also ensures that the necessary R and package versions are all documented. With a simple R command anyone can download `rtZIKVrisk`:
+I mentioned earlier that R packages keep your data in a self-contained bundle, and I think this is one of the best reasons to turn a paper into a package. Making a package allows anyone to reproduce your results, see your code, and more fully understand your analysis. It also ensures that the necessary R and package versions are all documented. With a simple R command anyone can download `rtZIKVrisk`:
 
 ```{r, eval=FALSE}
     install.packages("devtools")
@@ -40,12 +47,14 @@ or begin simulating epidemics in Texas counties.
   plot_zika_outbreaks(outbreak_sim)
 ```
 
-I think this is really cool, but also realize that probably no one will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code `run_zika_sim()`, and learn how to implement one for their own purposes. I know that I've learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.
+If they have any issues running the code, they can use the standard help functions from within R to look at the function documentation and examples.
+
+I think this is really cool, but also realize that few people will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code `run_zika_sim()`, and learn how to implement one for their own purposes. I know that I've learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.
 
 ## Improve your coding
-We started this project in April of 2016 in a rush, trying to get the project pushed out in a couple of weeks (We succeeded in getting it on Biorxiv as a preprint, but it took over a year until its eventual publication). That meant that our project repository on github was (and still is) a mess. Collaborators all had their own scripts, and it was hard to keep track of all of the changes. Somewhere in between that first preprint and now, I turned that mess into the `rtZIKVrisk` package, and it felt great.
+We started this project in April of 2016 in a rush, trying to get the project pushed out in a couple of weeks. That meant that our project repository on github was (and still is) a mess. Collaborators all had their own scripts, and it was hard to keep track of all of the changes. 
 
-The process made me think hard about the functions from those scripts that we were actually using and put them into a reasonable format that was organized. I broke the code up into data munging, simulation, analysis, and plotting functions, which could then be self contained pieces. I now know where to look for functions for each stage of the analysis, and can also see the documentation with the simple R search `?run_zika_sim`. Overall, I was able to make a much more permanent location for the materials from the paper, and make it more accessible to myself and others in the future -- knowing that others will see your code definitely helps force you to improve.  
+Turning those scripts into a package made me think hard about the functions from those scripts that we were actually using and putting them into a reasonable format that was organized. I broke the code up into data munging, simulation, analysis, and plotting functions, which could then be self contained pieces. I now know where to look for functions for each stage of the analysis, and can also see the documentation with the simple R search `?run_zika_sim` (being forced to make documentation for your functions can be annoying, but it is extremely useful in the end). Overall, I was able to make a much more permanent location for the materials from the paper, and make it more accessible to myself and others in the future -- knowing that others will see your code definitely helps force you to improve. 
 
 
 ## Get people interested in your project
@@ -64,21 +73,40 @@ plot_epi_prob(travis_epi_prob)
 This was a cool feature that I thought (and still hope) that the people impacted by our study might be interested in seeing and exploring for themselves.
 
 
-## Easy regeneration of figures
-All of the data contained within the figures comes along with the package in a self-contained way. That means that outputting the figures is quick, because you don't need to regenerate the data (something I know [Claus Wilke](https://twitter.com/ClausWilke) has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the `save_plot()` function from within `cowplot`.
+## Easily regenerate figures
+Remember the last time you needed to get figures together for a presentation or poster? If you're like me, you probably wanted to tweak things a bit from your manuscript figure. Even if you wanted to make a simple change to the text size, it probably involved digging through old R scripts, wading through code to find the right figure plots, and then praying that the code still runs. The largest benefit of having the R package for me so far, has been for easily making the figures, and if you're going to do anything for your paper I would suggest doing this.
+
+All of the data contained within the figures can be packaged in with the plotting functions. That means that outputting the figures is quick and foolproof, because you don't need to regenerate the data (something I know [Claus Wilke](https://twitter.com/ClausWilke) has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the `save_plot()` function from within the [cowplot package](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html).
 
 ```{r, fig.width=5, fig.height=5, cache=TRUE}
     plot_fig2(panels = "a")
 ```
 
+or if you'd like to say remove one of the layers, you can customize it by looking at the layers of the ggplot and removing the layers you don't want to be plotted. So let's remove the points and text from the previous plot.
 
-# Why not to turn papers into packages
-Documenting and cleaning your code is always a pain, so I think there are some good reasons to not worry about putting things into a package.
+```{r, fig.width=5, fig.height=5, cache=TRUE}
+    p <- plot_fig2(panels = "a")
+    p$layers
+    
+    # Remove the points and text
+    p$layers[[2]] <- p$layers[[3]] <- NULL
+    p
+```
+
+This is a great technique for making consecutive presentation slides that add features as you go to help walk people through your results.
+
+# Why you shouldn't turn papers into packages
+I don't think there's a one-size-fits-all solution for how to make your code and analyses available for everyone to use, so here are a few cases where it might not make sense to make an R package.
+
+## You already have a robust way for sharing your analysis
+I personally like the self-contained nature of R packages, but I'm sure there are many legitimate ways to make that happen. I know many people that make a single github repository with a well documented README that seems to work pretty well. I think [this well-documented repo](https://github.com/TAlexPerkins/Zika_nmicrobiol_2016) from Dr. Alex Perkins is a great example of doing just that. 
+
 
 ## Your analysis isn't self-contained within R
-One of my other projects uses C++ to run simulations, and then I do the analysis in R. In my mind it's not necessary to make an R package for simply the analysis scripts, because I would still need to document and share the C++ code elsewhere. I think for projects like that it makes more sense to have a github repository or something similar that can contain everything with a well documented README.
+One of my other projects uses C++ to run simulations, and then I do the analysis in R. In my mind it's more confusing to have an R package for those analysis scripts, because the simulation code would need to be documented elswhere. I think for projects like that it makes more sense to have a github repository or something similar that can contain everything with a well documented README. In the future, though, I'd like to integrate that C++ code with R through `RCpp`, to be able to make it into a self-contained R package.
 
-## You have a single self-contained R script
+## You're in too deep on your current project
+I get it, things are crazy, you're code is a mess, and you don't have time to turn your current analysis into an R package (though I hope you're still making the code available in some format). Please consider just making the R package with the figure plotting functions I discussed above though. Trust me, you won't regret it! As for the whole analysis in a package, just keep it in mind for your next project. It's definitely more time efficient if you start your analysis with the R package in mind compared to converting it after the fact.
 
-
-
+-------------------------------------
+I'm curious to hear other people's opinions on this, so let me what you think [\@foxandtheflu](https://twitter.com/foxandtheflu).

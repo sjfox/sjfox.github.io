@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.19" />
 
-  <title>Introducting rtZIKVrisk &middot; Fox and the flu</title>
+  <title>You should make an R package for your paper &middot; Fox and the flu</title>
 
   
   
@@ -21,13 +21,13 @@
   <!--<![endif]-->
 
   <!--[if lte IE 8]>
-  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="/css/side-menu.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="/css/blackburn.css">
+  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
 
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -44,7 +44,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
 
   
   
@@ -63,7 +63,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="/">Blackburn</a>
+  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Blackburn</a>
 
 
   <div class="pure-menu">
@@ -71,19 +71,25 @@
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
+          <a class="pure-menu-link" href="https://sjfox.github.io/publications/"><i class='fa fa-list fa-fw'></i>Publications</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
       
         </li>
       
@@ -200,7 +206,7 @@
 
 
 <div class="header">
-  <h1>Introducting rtZIKVrisk</h1>
+  <h1>You should make an R package for your paper</h1>
   <h2></h2>
 </div>
 <div class="content">
@@ -209,7 +215,7 @@
 
   <div>
     <i class="fa fa-calendar fa-fw"></i>
-    <time>04 May 2017, 10:37</time>
+    <time>10 May 2017, 10:37</time>
   </div>
 
   
@@ -222,11 +228,11 @@
   <div>
     <i class="fa fa-tags fa-fw"></i>
     
-      <a class="post-taxonomy-tag" href="/tags/simulations">simulations</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/r-package">r package</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="/tags/zika">zika</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/rtzikvrisk">rtZIKVrisk</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="/tags/vignette">vignette</a>
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/blog">blog</a>
     
   </div>
   
@@ -236,33 +242,43 @@
 
   <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab’s recent Zika paper, <a href="http://biorxiv.org/content/early/2016/06/07/056648">Assessing Real-time Zika Risk in the United States</a> (published today!). To get an idea of the content from that paper you can check out the blogpost at BMC Infectious Diseases. I’ve also given an introduction to the package on the <a href="http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html">rtZIKVrisk github</a>. Here I wanted to talk a bit about some of the advantages of putting your papers into packages.</p>
+<p>I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab’s recent Zika paper, <a href="https://bmcinfectdis.biomedcentral.com/articles/10.1186/s12879-017-2394-9">Assessing Real-time Zika Risk in the United States</a>. If you’re interested in learning about the content from that paper you can check out the blogpost hosted on the <a href="https://blogs.biomedcentral.com/bmcseriesblog/2017/05/05/assessing-real-time-zika-risk-in-the-united-states/">BMC Infectious Diseases blog</a>. I’ve also given an introduction to the package on the <a href="http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html">rtZIKVrisk github</a>. Here I wanted to talk a bit about some of the advantages of putting your papers into packages (both for yourself and other researchers).</p>
 </div>
-<div id="why-turn-papers-into-packages" class="section level1">
-<h1>Why turn papers into packages</h1>
+<div id="what-goes-into-an-r-package" class="section level1">
+<h1>What goes into an R package</h1>
+<p>R packages are made up of three main things: (1) data, (2) functions, and (3) documentation. Combining them into a single, self-contained bundle, means that all of the computational work from a project can be found in one place, downloaded and installed simply, and then run with a freely availible software anyone can obtain. As an added bonus you can even add a vignette to the package, which you can use to illustrate example analyses or a sample pipeline.</p>
+</div>
+<div id="why-you-should-turn-papers-into-packages" class="section level1">
+<h1>Why you should turn papers into packages</h1>
+<p>So aside from the obvious benefit, why should you, a scientist who has limited time consider turning your paper into an R package?</p>
+<div id="it-doesnt-take-that-much-time" class="section level2">
+<h2>It doesn’t take that much time</h2>
+<p>I started with <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/">Hilary Parker’s introduction</a>, and then looked at <a href="http://r-pkgs.had.co.nz/">Hadley Wickham’s</a> more comprehensive book when I needed it. All-in-all, it took me about a solid day and a half to take my existing code and put it into the documented and fully functional package. In the scheme of things that’s not that much time, and it gets quicker when you’ve done it once. I’ve reduced the time burden even further, because I’ve now started coding my current projects as R packages, so there’s no need to convert everything over once it’s finished (I haven’t fully mastered this skill, though I’ll likely write a blogpost about that later on).</p>
+</div>
 <div id="foster-open-science" class="section level2">
 <h2>Foster open science</h2>
-<p>I think this is one of the best reasons to turn a paper into a package. Making a package allows anyone to reproduce your results, see your code, and more fully understand your analysis. It also ensures that the necessary R and package versions are all documented. With a simple R command anyone can download <code>rtZIKVrisk</code>:</p>
+<p>I mentioned earlier that R packages keep your data in a self-contained bundle, and I think this is one of the best reasons to turn a paper into a package. Making a package allows anyone to reproduce your results, see your code, and more fully understand your analysis. It also ensures that the necessary R and package versions are all documented. With a simple R command anyone can download <code>rtZIKVrisk</code>:</p>
 <pre class="r"><code>    install.packages(&quot;devtools&quot;)
     devtools::install_github(&quot;sjfox/rtZIKVrisk&quot;)</code></pre>
 <p>From there a few lines is all that it takes to recreate any of our figures,</p>
 <pre class="r"><code>    library(rtZIKVrisk)
     plot_fig2()</code></pre>
-<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png" width="700px" /></p>
+<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png" width="700px" /></p>
 <p>or begin simulating epidemics in Texas counties.</p>
 <pre class="r"><code>  set.seed(808)
   sim_parms &lt;- zika_def_parms()
   outbreak_sim &lt;- run_n_zika_sims(num_reps = 100, sim_parms)
   plot_final_sizes(outbreak_sim)</code></pre>
-<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png" width="576" /></p>
+<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png" width="576" /></p>
 <pre class="r"><code>  plot_zika_outbreaks(outbreak_sim)</code></pre>
-<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png" width="576" /></p>
-<p>I think this is really cool, but also realize that probably no one will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code <code>run_zika_sim()</code>, and learn how to implement one for their own purposes. I know that I’ve learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.</p>
+<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png" width="576" /></p>
+<p>If they have any issues running the code, they can use the standard help functions from within R to look at the function documentation and examples.</p>
+<p>I think this is really cool, but also realize that few people will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code <code>run_zika_sim()</code>, and learn how to implement one for their own purposes. I know that I’ve learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.</p>
 </div>
 <div id="improve-your-coding" class="section level2">
 <h2>Improve your coding</h2>
-<p>We started this project in April of 2016 in a rush, trying to get the project pushed out in a couple of weeks (We succeeded in getting it on Biorxiv as a preprint, but it took over a year until its eventual publication). That meant that our project repository on github was (and still is) a mess. Collaborators all had their own scripts, and it was hard to keep track of all of the changes. Somewhere in between that first preprint and now, I turned that mess into the <code>rtZIKVrisk</code> package, and it felt great.</p>
-<p>The process made me think hard about the functions from those scripts that we were actually using and put them into a reasonable format that was organized. I broke the code up into data munging, simulation, analysis, and plotting functions, which could then be self contained pieces. I now know where to look for functions for each stage of the analysis, and can also see the documentation with the simple R search <code>?run_zika_sim</code>. Overall, I was able to make a much more permanent location for the materials from the paper, and make it more accessible to myself and others in the future – knowing that others will see your code definitely helps force you to improve.</p>
+<p>We started this project in April of 2016 in a rush, trying to get the project pushed out in a couple of weeks. That meant that our project repository on github was (and still is) a mess. Collaborators all had their own scripts, and it was hard to keep track of all of the changes.</p>
+<p>Turning those scripts into a package made me think hard about the functions from those scripts that we were actually using and putting them into a reasonable format that was organized. I broke the code up into data munging, simulation, analysis, and plotting functions, which could then be self contained pieces. I now know where to look for functions for each stage of the analysis, and can also see the documentation with the simple R search <code>?run_zika_sim</code> (being forced to make documentation for your functions can be annoying, but it is extremely useful in the end). Overall, I was able to make a much more permanent location for the materials from the paper, and make it more accessible to myself and others in the future – knowing that others will see your code definitely helps force you to improve.</p>
 </div>
 <div id="get-people-interested-in-your-project" class="section level2">
 <h2>Get people interested in your project</h2>
@@ -270,29 +286,62 @@
 <pre class="r"><code>travis_parms &lt;- get_county_parms(&quot;travis&quot;)
 travis_sims &lt;- run_n_zika_sims(num_reps = 1000, sim_parms)
 plot_final_sizes(travis_sims)</code></pre>
-<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
+<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
 <pre class="r"><code># Plot the epidemic probablity as a function of reported cases based on simulations
 travis_epi_prob &lt;- get_epidemic_prob_by_d(travis_sims, prev_threshold = 10, cum_threshold = 100)
 plot_epi_prob(travis_epi_prob)</code></pre>
-<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png" width="576" /></p>
+<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png" width="576" /></p>
 <p>This was a cool feature that I thought (and still hope) that the people impacted by our study might be interested in seeing and exploring for themselves.</p>
 </div>
-<div id="easy-regeneration-of-figures" class="section level2">
-<h2>Easy regeneration of figures</h2>
-<p>All of the data contained within the figures comes along with the package in a self-contained way. That means that outputting the figures is quick, because you don’t need to regenerate the data (something I know <a href="https://twitter.com/ClausWilke">Claus Wilke</a> has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the <code>save_plot()</code> function from within <code>cowplot</code>.</p>
+<div id="easily-regenerate-figures" class="section level2">
+<h2>Easily regenerate figures</h2>
+<p>Remember the last time you needed to get figures together for a presentation or poster? If you’re like me, you probably wanted to tweak things a bit from your manuscript figure. Even if you wanted to make a simple change to the text size, it probably involved digging through old R scripts, wading through code to find the right figure plots, and then praying that the code still runs. The largest benefit of having the R package for me so far, has been for easily making the figures, and if you’re going to do anything for your paper I would suggest doing this.</p>
+<p>All of the data contained within the figures can be packaged in with the plotting functions. That means that outputting the figures is quick and foolproof, because you don’t need to regenerate the data (something I know <a href="https://twitter.com/ClausWilke">Claus Wilke</a> has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the <code>save_plot()</code> function from within the <a href="https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html">cowplot package</a>.</p>
 <pre class="r"><code>    plot_fig2(panels = &quot;a&quot;)</code></pre>
-<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p>or if you’d like to say remove one of the layers, you can customize it by looking at the layers of the ggplot and removing the layers you don’t want to be plotted. So let’s remove the points and text from the previous plot.</p>
+<pre class="r"><code>    p &lt;- plot_fig2(panels = &quot;a&quot;)
+    p$layers</code></pre>
+<pre><code>## [[1]]
+## mapping: group = group, fill = log(import_prob) 
+## geom_polygon: na.rm = FALSE
+## stat_identity: na.rm = FALSE
+## position_identity 
+## 
+## [[2]]
+## mapping: x = lon, y = lat 
+## geom_point: na.rm = FALSE
+## stat_identity: na.rm = FALSE
+## position_identity 
+## 
+## [[3]]
+## mapping: x = lon, y = lat, label = Name 
+## geom_text_repel: parse = FALSE, na.rm = FALSE, box.padding = 0.25, point.padding = 1e-06, segment.colour = black, segment.size = 0.5, segment.alpha = NULL, min.segment.length = 0.5, arrow = NULL, force = 0.75, max.iter = 2000, nudge_x = 0, nudge_y = 0
+## stat_identity: na.rm = FALSE
+## position_identity</code></pre>
+<pre class="r"><code>    # Remove the points and text
+    p$layers[[2]] &lt;- p$layers[[3]] &lt;- NULL
+    p</code></pre>
+<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
+<p>This is a great technique for making consecutive presentation slides that add features as you go to help walk people through your results.</p>
 </div>
 </div>
-<div id="why-not-to-turn-papers-into-packages" class="section level1">
-<h1>Why not to turn papers into packages</h1>
-<p>Documenting and cleaning your code is always a pain, so I think there are some good reasons to not worry about putting things into a package.</p>
+<div id="why-you-shouldnt-turn-papers-into-packages" class="section level1">
+<h1>Why you shouldn’t turn papers into packages</h1>
+<p>I don’t think there’s a one-size-fits-all solution for how to make your code and analyses available for everyone to use, so here are a few cases where it might not make sense to make an R package.</p>
+<div id="you-already-have-a-robust-way-for-sharing-your-analysis" class="section level2">
+<h2>You already have a robust way for sharing your analysis</h2>
+<p>I personally like the self-contained nature of R packages, but I’m sure there are many legitimate ways to make that happen. I know many people that make a single github repository with a well documented README that seems to work pretty well. I think <a href="https://github.com/TAlexPerkins/Zika_nmicrobiol_2016">this well-documented repo</a> from Dr. Alex Perkins is a great example of doing just that.</p>
+</div>
 <div id="your-analysis-isnt-self-contained-within-r" class="section level2">
 <h2>Your analysis isn’t self-contained within R</h2>
-<p>One of my other projects uses C++ to run simulations, and then I do the analysis in R. In my mind it’s not necessary to make an R package for simply the analysis scripts, because I would still need to document and share the C++ code elsewhere. I think for projects like that it makes more sense to have a github repository or something similar that can contain everything with a well documented README.</p>
+<p>One of my other projects uses C++ to run simulations, and then I do the analysis in R. In my mind it’s more confusing to have an R package for those analysis scripts, because the simulation code would need to be documented elswhere. I think for projects like that it makes more sense to have a github repository or something similar that can contain everything with a well documented README. In the future, though, I’d like to integrate that C++ code with R through <code>RCpp</code>, to be able to make it into a self-contained R package.</p>
 </div>
-<div id="you-have-a-single-self-contained-r-script" class="section level2">
-<h2>You have a single self-contained R script</h2>
+<div id="youre-in-too-deep-on-your-current-project" class="section level2">
+<h2>You’re in too deep on your current project</h2>
+<p>I get it, things are crazy, you’re code is a mess, and you don’t have time to turn your current analysis into an R package (though I hope you’re still making the code available in some format). Please consider just making the R package with the figure plotting functions I discussed above though. Trust me, you won’t regret it! As for the whole analysis in a package, just keep it in mind for your next project. It’s definitely more time efficient if you start your analysis with the R package in mind compared to converting it after the fact.</p>
+<hr />
+<p>I’m curious to hear other people’s opinions on this, so let me what you think <a href="https://twitter.com/foxandtheflu">@foxandtheflu</a>.</p>
 </div>
 </div>
 
@@ -301,13 +350,13 @@ plot_epi_prob(travis_epi_prob)</code></pre>
 <div class="prev-next-post pure-g">
   <div class="pure-u-1-24" style="text-align: left;">
     
-    <a href="/post/temp/"><i class="fa fa-chevron-left"></i></a>
+    <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
   <div class="pure-u-10-24">
     
     <nav class="prev">
-      <a href="/post/temp/">temp</a>
+      <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Simple trick to speed up ODE integration in R</a>
     </nav>
     
   </div>
@@ -330,7 +379,7 @@ plot_epi_prob(travis_epi_prob)</code></pre>
 
 </div>
 </div>
-<script src="/js/ui.js"></script>
+<script src="https://sjfox.github.io/js/ui.js"></script>
 
 
 <script>
