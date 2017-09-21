@@ -28,7 +28,7 @@ data_frame(x=1:10)  %>%
 
 Those lines work no matter how you run them. However, let's say we no longer want to make the `x2` column, so we comment out the line to potentially save it for later if we change our minds:
 
-```{r}
+```{r, eval=FALSE}
 data_frame(x=1:10)  %>%  
   mutate(# x2 = x*2,  
          x3 = x*3) %>%  

@@ -38,14 +38,6 @@ data_frame(x=1:10)  %&amp;gt;%
   mutate(# x2 = x*2,  
          x3 = x*3) %&amp;gt;%  
   filter(x&amp;gt;5)   &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 2
-##       x    x3
-##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;
-## 1     6    18
-## 2     7    21
-## 3     8    24
-## 4     9    27
-## 5    10    30&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;the-bug&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;The Bug&lt;/h2&gt;
