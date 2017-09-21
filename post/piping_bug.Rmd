@@ -1,0 +1,62 @@
+---
+date: 2017-09-21T13:25:32-05:00
+description: ""
+draft: false
+tags: ["tidyverse", "debugging", "RStudio"]
+title: A pesky piping bug with RStudio and the tidyverse
+categories: ["R"]
+---
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE)
+
+```
+
+Today I encountered an error in the `tidyverse` that took me a while to figure out, so I wanted to document it for others. I'm also not sure where this error originates, so I wasn't positive which package to post it in (or with RStudio) - I'd be happy to submit a bug report if anyone can point me in the right direction :)
+
+## The Scenario
+You have a data frame you want to alter using piping, something like this.
+
+```{r}
+library(tidyverse)
+
+data_frame(x=1:10)  %>%  
+  mutate(x2 = x*2,  
+         x3 = x*3) %>%  
+  filter(x>5)   
+
+```
+
+Those lines work no matter how you run them. However, let's say we no longer want to make the `x2` column, so we comment out the line to potentially save it for later if we change our minds:
+
+```{r}
+data_frame(x=1:10)  %>%  
+  mutate(# x2 = x*2,  
+         x3 = x*3) %>%  
+  filter(x>5)   
+
+```
+
+## The Bug
+The whole code runs perfectly if you select the whole chunk, or simply have your cursor on either of the first two lines before running with cmd + enter / ctrl + enter. However, if you put your cursor on the third or fourth lines, you get weird multiple line errors:
+
+```
+> x3 = x*3) %>%  
+Error: unexpected ')' in "x3 = x*3)"
+>   filter(x>5)
+Error in filter(x > 5) : object 'x' not found
+```
+
+The error seems to  to be that RStudio (or maybe one of the packages) interpret the `#` following `mutate` as breaking the chunk somehow, so it doesn't run the whole chunk. I was surprised at this, though, because the following code works perfectly fine, regardless of how you try to run it (even if you try from cursor on the last two lines):
+
+```{r}
+data_frame(x=1:10)  %>%  
+  mutate(x1 = x*1,
+         # x2 = x*2,  
+         x3 = x*3) %>%  
+  filter(x>5)  
+```
+
+So it appears it is dependent on the `#` being directly after the function, maybe? I haven't gone through all iterations to more fully understand it.
+
+## Conclusion
+As far as bugs go, this is fairly inconsequential. However, it took me a while to debug the error on a somewhat complicated 15 line pipe with ggplot, because of the inconsistency in the error R spat out as well as the innocuousness of the causitive code. Do you get the same errors as I do? If so, should it be fixed, or is there a purpose I'm not seeing?

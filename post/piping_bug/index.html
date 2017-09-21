@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.19" />
 
-  <title>Posts &middot; Fox and the flu</title>
+  <title>A pesky piping bug with RStudio and the tidyverse &middot; Fox and the flu</title>
 
   
   
@@ -36,8 +36,6 @@
   <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
 
   
-  
-  <link rel="alternate" type="application/rss+xml" title="Fox and the flu" href="https://sjfox.github.io/post/index.xml" />
   
 
   
@@ -208,32 +206,130 @@
 
 
 <div class="header">
-  <h1>Posts</h1>
+  <h1>A pesky piping bug with RStudio and the tidyverse</h1>
+  <h2></h2>
 </div>
 <div class="content">
-  
-  <h2>2017</h2>
-  <ul>
-  
-    <li><time>21 Sep 2017</time> - <a href="https://sjfox.github.io/post/piping_bug/">A pesky piping bug with RStudio and the tidyverse</a></li>
+
+  <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>21 Sep 2017</time>
+  </div>
 
   
-    <li><time>10 May 2017</time> - <a href="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/">You should make an R package for your paper</a></li>
 
   
-    <li><time>24 Apr 2017</time> - <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Simple trick to speed up ODE integration in R</a></li>
 
   
-  </ul>
   
-  <h2>2016</h2>
-  <ul>
   
-    <li><time>23 Jul 2016</time> - <a href="https://sjfox.github.io/post/2015-07-23-r-rmarkdown/">Bootstrapping Time Series Data</a></li>
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/tidyverse">tidyverse</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/debugging">debugging</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/rstudio">RStudio</a>
+    
+  </div>
+  
+  
+
+</div>
+
+  <p>Today I encountered an error in the <code>tidyverse</code> that took me a while to figure out, so I wanted to document it for others. I’m also not sure where this error originates, so I wasn’t positive which package to post it in (or with RStudio) - I’d be happy to submit a bug report if anyone can point me in the right direction :)</p>
+<div id="the-scenario" class="section level2">
+<h2>The Scenario</h2>
+<p>You have a data frame you want to alter using piping, something like this.</p>
+<pre class="r"><code>library(tidyverse)
+
+data_frame(x=1:10)  %&gt;%  
+  mutate(x2 = x*2,  
+         x3 = x*3) %&gt;%  
+  filter(x&gt;5)   </code></pre>
+<pre><code>## # A tibble: 5 x 3
+##       x    x2    x3
+##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     6    12    18
+## 2     7    14    21
+## 3     8    16    24
+## 4     9    18    27
+## 5    10    20    30</code></pre>
+<p>Those lines work no matter how you run them. However, let’s say we no longer want to make the <code>x2</code> column, so we comment out the line to potentially save it for later if we change our minds:</p>
+<pre class="r"><code>data_frame(x=1:10)  %&gt;%  
+  mutate(# x2 = x*2,  
+         x3 = x*3) %&gt;%  
+  filter(x&gt;5)   </code></pre>
+<pre><code>## # A tibble: 5 x 2
+##       x    x3
+##   &lt;int&gt; &lt;dbl&gt;
+## 1     6    18
+## 2     7    21
+## 3     8    24
+## 4     9    27
+## 5    10    30</code></pre>
+</div>
+<div id="the-bug" class="section level2">
+<h2>The Bug</h2>
+<p>The whole code runs perfectly if you select the whole chunk, or simply have your cursor on either of the first two lines before running with cmd + enter / ctrl + enter. However, if you put your cursor on the third or fourth lines, you get weird multiple line errors:</p>
+<pre><code>&gt; x3 = x*3) %&gt;%  
+Error: unexpected &#39;)&#39; in &quot;x3 = x*3)&quot;
+&gt;   filter(x&gt;5)
+Error in filter(x &gt; 5) : object &#39;x&#39; not found</code></pre>
+<p>The error seems to to be that RStudio (or maybe one of the packages) interpret the <code>#</code> following <code>mutate</code> as breaking the chunk somehow, so it doesn’t run the whole chunk. I was surprised at this, though, because the following code works perfectly fine, regardless of how you try to run it (even if you try from cursor on the last two lines):</p>
+<pre class="r"><code>data_frame(x=1:10)  %&gt;%  
+  mutate(x1 = x*1,
+         # x2 = x*2,  
+         x3 = x*3) %&gt;%  
+  filter(x&gt;5)  </code></pre>
+<pre><code>## # A tibble: 5 x 3
+##       x    x1    x3
+##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     6     6    18
+## 2     7     7    21
+## 3     8     8    24
+## 4     9     9    27
+## 5    10    10    30</code></pre>
+<p>So it appears it is dependent on the <code>#</code> being directly after the function, maybe? I haven’t gone through all iterations to more fully understand it.</p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>As far as bugs go, this is fairly inconsequential. However, it took me a while to debug the error on a somewhat complicated 15 line pipe with ggplot, because of the inconsistency in the error R spat out as well as the innocuousness of the causitive code. Do you get the same errors as I do? If so, should it be fixed, or is there a purpose I’m not seeing?</p>
+</div>
+
 
   
-  </ul>
+<div class="prev-next-post pure-g">
+  <div class="pure-u-1-24" style="text-align: left;">
+    
+    <a href="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/"><i class="fa fa-chevron-left"></i></a>
+    
+  </div>
+  <div class="pure-u-10-24">
+    
+    <nav class="prev">
+      <a href="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/">You should make an R package for your paper</a>
+    </nav>
+    
+  </div>
+  <div class="pure-u-2-24">
+    &nbsp;
+  </div>
+  <div class="pure-u-10-24">
+    
+  </div>
+  <div class="pure-u-1-24" style="text-align: right;">
+    
+  </div>
+</div>
+
+
+
   
+
 </div>
 
 </div>

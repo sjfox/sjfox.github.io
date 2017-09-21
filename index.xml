@@ -7,8 +7,76 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <lastBuildDate>Wed, 10 May 2017 10:37:49 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 21 Sep 2017 13:25:32 -0500</lastBuildDate>
     <atom:link href="https://sjfox.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>A pesky piping bug with RStudio and the tidyverse</title>
+      <link>https://sjfox.github.io/post/piping_bug/</link>
+      <pubDate>Thu, 21 Sep 2017 13:25:32 -0500</pubDate>
+      
+      <guid>https://sjfox.github.io/post/piping_bug/</guid>
+      <description>&lt;p&gt;Today I encountered an error in the &lt;code&gt;tidyverse&lt;/code&gt; that took me a while to figure out, so I wanted to document it for others. I’m also not sure where this error originates, so I wasn’t positive which package to post it in (or with RStudio) - I’d be happy to submit a bug report if anyone can point me in the right direction :)&lt;/p&gt;
+&lt;div id=&#34;the-scenario&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;The Scenario&lt;/h2&gt;
+&lt;p&gt;You have a data frame you want to alter using piping, something like this.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+
+data_frame(x=1:10)  %&amp;gt;%  
+  mutate(x2 = x*2,  
+         x3 = x*3) %&amp;gt;%  
+  filter(x&amp;gt;5)   &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 3
+##       x    x2    x3
+##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     6    12    18
+## 2     7    14    21
+## 3     8    16    24
+## 4     9    18    27
+## 5    10    20    30&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Those lines work no matter how you run them. However, let’s say we no longer want to make the &lt;code&gt;x2&lt;/code&gt; column, so we comment out the line to potentially save it for later if we change our minds:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data_frame(x=1:10)  %&amp;gt;%  
+  mutate(# x2 = x*2,  
+         x3 = x*3) %&amp;gt;%  
+  filter(x&amp;gt;5)   &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 2
+##       x    x3
+##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     6    18
+## 2     7    21
+## 3     8    24
+## 4     9    27
+## 5    10    30&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;the-bug&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;The Bug&lt;/h2&gt;
+&lt;p&gt;The whole code runs perfectly if you select the whole chunk, or simply have your cursor on either of the first two lines before running with cmd + enter / ctrl + enter. However, if you put your cursor on the third or fourth lines, you get weird multiple line errors:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; x3 = x*3) %&amp;gt;%  
+Error: unexpected &amp;#39;)&amp;#39; in &amp;quot;x3 = x*3)&amp;quot;
+&amp;gt;   filter(x&amp;gt;5)
+Error in filter(x &amp;gt; 5) : object &amp;#39;x&amp;#39; not found&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The error seems to to be that RStudio (or maybe one of the packages) interpret the &lt;code&gt;#&lt;/code&gt; following &lt;code&gt;mutate&lt;/code&gt; as breaking the chunk somehow, so it doesn’t run the whole chunk. I was surprised at this, though, because the following code works perfectly fine, regardless of how you try to run it (even if you try from cursor on the last two lines):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data_frame(x=1:10)  %&amp;gt;%  
+  mutate(x1 = x*1,
+         # x2 = x*2,  
+         x3 = x*3) %&amp;gt;%  
+  filter(x&amp;gt;5)  &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 3
+##       x    x1    x3
+##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     6     6    18
+## 2     7     7    21
+## 3     8     8    24
+## 4     9     9    27
+## 5    10    10    30&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So it appears it is dependent on the &lt;code&gt;#&lt;/code&gt; being directly after the function, maybe? I haven’t gone through all iterations to more fully understand it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;As far as bugs go, this is fairly inconsequential. However, it took me a while to debug the error on a somewhat complicated 15 line pipe with ggplot, because of the inconsistency in the error R spat out as well as the innocuousness of the causitive code. Do you get the same errors as I do? If so, should it be fixed, or is there a purpose I’m not seeing?&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>You should make an R package for your paper</title>
