@@ -21,13 +21,13 @@
   <!--<![endif]-->
 
   <!--[if lte IE 8]>
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
+  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
+  <link rel="stylesheet" href="/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
+  <link rel="stylesheet" href="/css/blackburn.css">
 
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -44,7 +44,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 
   
   
@@ -63,7 +63,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Spencer J Fox</a>
+  <a class="pure-menu-heading brand" href="/">Spencer J Fox</a>
 
 
   <div class="pure-menu">
@@ -71,25 +71,25 @@
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
+          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/publications/"><i class='fa fa-list fa-fw'></i>Publications</a>
+          <a class="pure-menu-link" href="/publications/"><i class='fa fa-list fa-fw'></i>Publications</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
+          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
       
         </li>
       
@@ -228,11 +228,11 @@
   <div>
     <i class="fa fa-tags fa-fw"></i>
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/r-package">r package</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/r-package">r package</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/rtzikvrisk">rtZIKVrisk</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/rtzikvrisk">rtZIKVrisk</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/blog">blog</a>
+      <a class="post-taxonomy-tag" href="/tags/blog">blog</a>
     
   </div>
   
@@ -263,15 +263,15 @@
 <p>From there a few lines is all that it takes to recreate any of our figures,</p>
 <pre class="r"><code>    library(rtZIKVrisk)
     plot_fig2()</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png" width="700px" /></p>
+<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png" width="700px" /></p>
 <p>or begin simulating epidemics in Texas counties.</p>
 <pre class="r"><code>  set.seed(808)
   sim_parms &lt;- zika_def_parms()
   outbreak_sim &lt;- run_n_zika_sims(num_reps = 100, sim_parms)
   plot_final_sizes(outbreak_sim)</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png" width="576" /></p>
+<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png" width="576" /></p>
 <pre class="r"><code>  plot_zika_outbreaks(outbreak_sim)</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png" width="576" /></p>
+<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png" width="576" /></p>
 <p>If they have any issues running the code, they can use the standard help functions from within R to look at the function documentation and examples.</p>
 <p>I think this is really cool, but also realize that few people will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code <code>run_zika_sim()</code>, and learn how to implement one for their own purposes. I know that I’ve learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.</p>
 </div>
@@ -286,11 +286,11 @@
 <pre class="r"><code>travis_parms &lt;- get_county_parms(&quot;travis&quot;)
 travis_sims &lt;- run_n_zika_sims(num_reps = 1000, sim_parms)
 plot_final_sizes(travis_sims)</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
+<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
 <pre class="r"><code># Plot the epidemic probablity as a function of reported cases based on simulations
 travis_epi_prob &lt;- get_epidemic_prob_by_d(travis_sims, prev_threshold = 10, cum_threshold = 100)
 plot_epi_prob(travis_epi_prob)</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png" width="576" /></p>
+<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png" width="576" /></p>
 <p>This was a cool feature that I thought (and still hope) that the people impacted by our study might be interested in seeing and exploring for themselves.</p>
 </div>
 <div id="easily-regenerate-figures" class="section level2">
@@ -298,7 +298,7 @@ plot_epi_prob(travis_epi_prob)</code></pre>
 <p>Remember the last time you needed to get figures together for a presentation or poster? If you’re like me, you probably wanted to tweak things a bit from your manuscript figure. Even if you wanted to make a simple change to the text size, it probably involved digging through old R scripts, wading through code to find the right figure plots, and then praying that the code still runs. The largest benefit of having the R package for me so far, has been for easily making the figures, and if you’re going to do anything for your paper I would suggest doing this.</p>
 <p>All of the data contained within the figures can be packaged in with the plotting functions. That means that outputting the figures is quick and foolproof, because you don’t need to regenerate the data (something I know <a href="https://twitter.com/ClausWilke">Claus Wilke</a> has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the <code>save_plot()</code> function from within the <a href="https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html">cowplot package</a>.</p>
 <pre class="r"><code>    plot_fig2(panels = &quot;a&quot;)</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
 <p>or if you’d like to say remove one of the layers, you can customize it by looking at the layers of the ggplot and removing the layers you don’t want to be plotted. So let’s remove the points and text from the previous plot.</p>
 <pre class="r"><code>    p &lt;- plot_fig2(panels = &quot;a&quot;)
     p$layers</code></pre>
@@ -322,7 +322,7 @@ plot_epi_prob(travis_epi_prob)</code></pre>
 <pre class="r"><code>    # Remove the points and text
     p$layers[[2]] &lt;- p$layers[[3]] &lt;- NULL
     p</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
+<p><img src="/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
 <p>This is a great technique for making consecutive presentation slides that add features as you go to help walk people through your results.</p>
 </div>
 </div>
@@ -350,13 +350,13 @@ plot_epi_prob(travis_epi_prob)</code></pre>
 <div class="prev-next-post pure-g">
   <div class="pure-u-1-24" style="text-align: left;">
     
-    <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/"><i class="fa fa-chevron-left"></i></a>
+    <a href="/post/temp/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
   <div class="pure-u-10-24">
     
     <nav class="prev">
-      <a href="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/">Simple trick to speed up ODE integration in R</a>
+      <a href="/post/temp/">temp</a>
     </nav>
     
   </div>
@@ -366,13 +366,13 @@ plot_epi_prob(travis_epi_prob)</code></pre>
   <div class="pure-u-10-24">
     
     <nav class="next">
-      <a href="https://sjfox.github.io/post/piping_bug/">A pesky piping bug with RStudio and the tidyverse</a>
+      <a href="/post/piping_bug/">A pesky piping bug with RStudio and the tidyverse</a>
     </nav>
     
   </div>
   <div class="pure-u-1-24" style="text-align: right;">
     
-    <a href="https://sjfox.github.io/post/piping_bug/"><i class="fa fa-chevron-right"></i></a>
+    <a href="/post/piping_bug/"><i class="fa fa-chevron-right"></i></a>
     
   </div>
 </div>
@@ -385,7 +385,7 @@ plot_epi_prob(travis_epi_prob)</code></pre>
 
 </div>
 </div>
-<script src="https://sjfox.github.io/js/ui.js"></script>
+<script src="/js/ui.js"></script>
 
 
 <script>
