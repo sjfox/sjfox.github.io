@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stats on Fox and the flu</title>
-    <link>/tags/stats/index.xml</link>
+    <link>https://sjfox.github.io/tags/stats/index.xml</link>
     <description>Recent content in Stats on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <atom:link href="/tags/stats/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sjfox.github.io/tags/stats/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Simple trick to speed up ODE integration in R</title>
-      <link>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
+      <link>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
       <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
+      <guid>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the &lt;code&gt;R&lt;/code&gt; environment and write &lt;code&gt;CSnippets&lt;/code&gt; for the &lt;code&gt;pomp&lt;/code&gt; package (more on this in a later blog), or to use &lt;code&gt;RCpp&lt;/code&gt;, but I used the &lt;code&gt;profvis&lt;/code&gt; package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.&lt;/p&gt;
@@ -68,7 +68,7 @@ epi_dat %&amp;gt;% head()&lt;/code&gt;&lt;/pre&gt;
 ## 6    5 0.9994000 0.0003499144 2.500909e-04&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat %&amp;gt;% gather(state, value, S:R) %&amp;gt;% ggplot(aes(time, value, color = state)) + 
     geom_line(size = 1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Let’s also confirm that both models give the same result.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat_base &amp;lt;- run_sir(init_states, times, params, sir)
 
@@ -90,7 +90,7 @@ summary(benchmark_std)&lt;/code&gt;&lt;/pre&gt;
 ## 1   100
 ## 2   100&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;autoplot(benchmark_std) + scale_y_continuous(trans = &amp;quot;identity&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Conclusions&lt;/h2&gt;
@@ -103,10 +103,10 @@ summary(benchmark_std)&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Bootstrapping Time Series Data</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
+      <link>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</link>
       <pubDate>Sat, 23 Jul 2016 21:13:14 -0500</pubDate>
       
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
+      <guid>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;This demonstration is part of a requirement for my statistical consulting class at UT Austin. I will go through the basics of bootstrapping time series data using three different resampling methods.&lt;/p&gt;
@@ -130,7 +130,7 @@ library(lubridate)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We will be investigating the Rio Negro river level in the &lt;code&gt;manaus&lt;/code&gt; dataset. We are interested in developing an AR(p) model to describe the river level through time. However, we are not interested in selecting the &lt;code&gt;p&lt;/code&gt; that is the best for the data, but rather understanding the full distribution of &lt;code&gt;p&lt;/code&gt; for these data, which is where the bootstrapping will come into play.&lt;/p&gt;
 &lt;p&gt;Always a good idea to see what your data look like first:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(manaus)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;creating-a-function-for-obtaining-a-test-statistic&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Creating a function for obtaining a test statistic&lt;/h1&gt;
@@ -203,14 +203,14 @@ samp_data &amp;lt;- data_frame(time = dmy(recording_dates), true = c(manaus), fi
 
 samp_data %&amp;gt;% gather(key, value, true:model_based) %&amp;gt;% ggplot(aes(time, value)) + 
     geom_line() + facet_wrap(~key)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The data look very similar to the true data, and if we didn’t know which was true, we probably wouldn’t be able to tell the difference between them, which is exactly what we’d like. Now let’s take a look at the distributions for the order parameter of the AR model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_dists &amp;lt;- data_frame(fixed = manaus_fixed$t[, 1], stationary = manaus_geom$t[, 
     1], model_based = manaus_model$t[, 1])
 
 p_dists %&amp;gt;% gather(key, value, fixed:model_based) %&amp;gt;% ggplot(aes(value)) + geom_histogram(bins = 15) + 
     facet_wrap(~key, nrow = 3)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Looks like the stationary and fixed methods give similar distributions for the order of the autoregressive model, but the model-based distribution is slightly larger. The best fit model to the original data have an order of 4, so you can see that the model-based method for resampling maintains that level of dependence between the data. However, the stationary and fixed methods reduce the dependence between the data slightly (by combining chunks of the time series at random), so the best fit order for the AR models is reduced. Overall, the model-based method appears to work best in this scenario (though there is an increased risk of model misspecification), and we get a confidence interval from 3 to 5 for the order of the model.&lt;/p&gt;
 &lt;/div&gt;
 </description>
