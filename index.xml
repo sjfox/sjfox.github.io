@@ -71,6 +71,32 @@ Error in filter(x &amp;gt; 5) : object &amp;#39;x&amp;#39; not found&lt;/code&gt
     </item>
     
     <item>
+      <title>In the media</title>
+      <link>https://sjfox.github.io/media/</link>
+      <pubDate>Sat, 10 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://sjfox.github.io/media/</guid>
+      <description>
+
+&lt;h2 id=&#34;pandemic-flu-risk&#34;&gt;Pandemic Flu Risk&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Austin local NPR. All things considered - October 20th, 2017&lt;/li&gt;
+&lt;li&gt;UTNews - &lt;a href=&#34;https://news.utexas.edu/2017/10/19/why-do-flu-pandemics-come-at-the-end-of-flu-season&#34;&gt;Cracking the Code: Why Flu Pandemics Come At the End of Flu Season&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;New york times - &lt;a href=&#34;https://www.nytimes.com/2017/12/08/health/next-flu-pandemic.html&#34;&gt;The Next Flu Pandemic Will Appear When You Least Expect It&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;zika-risk-in-texas&#34;&gt;Zika Risk in Texas&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The Texas Standard (Radio) - &lt;a href=&#34;http://www.texasstandard.org/stories/texas-standard-for-may-10-2017/&#34;&gt;Begins at the 16 minute mark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;BMC Series blog - &lt;a href=&#34;https://blogs.biomedcentral.com/bmcseriesblog/2017/05/05/assessing-real-time-zika-risk-in-the-united-states/&#34;&gt;Assessing real-time Zika risk in the United States&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Austin American-Statesman - &lt;a href=&#34;http://www.mystatesman.com/weather/almost-risk-zika-epidemic-texas-except-for-places/zdRuAbZ4IZenaCvQHrg4UL/&#34;&gt;Risk of Zika epidemic in Texas is almost zero, except for these three places&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
       <title>You should make an R package for your paper</title>
       <link>https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/</link>
       <pubDate>Wed, 10 May 2017 10:37:49 -0500</pubDate>
@@ -230,6 +256,8 @@ plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;Fox, SJ&lt;/strong&gt;, Owegi, H. O., Egot-Lemaire, S. J., Waite, L. R., Blackman, C. F., Page, J. K., &amp;amp; Waite, G. N. (2010). Macrophages under low oxygen culture conditions respond to ion parametric resonance magnetic fields. Biomedical sciences instrumentation, 47, 52-57.&lt;/p&gt;
 
 &lt;h2 id=&#34;preprints&#34;&gt;Preprints&lt;/h2&gt;
+
+&lt;p&gt;Bellan SE, Pulliam JRC, Graaf RVD, &lt;strong&gt;Fox SJ&lt;/strong&gt;, Dushoff J, Meyers LA. Quantifying ethical tradeoffs for vaccine efficacy trials during severe epidemics. bioRxiv. doi: &lt;a href=&#34;https://doi.org/10.1101/193649&#34;&gt;https://doi.org/10.1101/193649&lt;/a&gt;. In Review.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Fox, SJ&lt;/strong&gt;, Reeb, T., Ingram, E. (2017) Testing sexual strategies theory predictions for age and gender using popular song lyrics. PsyArXiv. &lt;a href=&#34;https://osf.io/preprints/psyarxiv/rj9es&#34;&gt;https://osf.io/preprints/psyarxiv/rj9es&lt;/a&gt;&lt;/p&gt;
 </description>
