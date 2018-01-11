@@ -17,7 +17,11 @@
       
       <guid>https://sjfox.github.io/post/world_map_flights/</guid>
       <description>&lt;p&gt;Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with &lt;a href=&#34;http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749&#34;&gt;this paper&lt;/a&gt;, though I can’t seem to find a link for it online, so here it is:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/img/striking_image_world_map.png&#34; title=&#34;Hypothetical flu spreading visualization&#34; alt=&#34;flight image&#34; /&gt; Anyway to begin you’re going to need to download the flight and airport data from &lt;a href=&#34;https://openflights.org/data.html&#34;&gt;here&lt;/a&gt;, which is a really amazing sight aggregating flight data and making it available for free!&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;https://sjfox.github.io/img/striking_image_world_map.png&#34; title=&#34;Hypothetical flu spreading visualization&#34; style=&#34;width:100.0%&#34; /&gt;
+
+&lt;/div&gt;
+&lt;p&gt;To start you’re going to need to download the flight and airport data from &lt;a href=&#34;https://openflights.org/data.html&#34;&gt;here&lt;/a&gt;, which is a really amazing sight aggregating flight data and making it available for free!&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
 
 airports &amp;lt;- read_csv(&amp;quot;data/flights/airports.csv&amp;quot;, col_names = c(&amp;quot;id&amp;quot;, &amp;quot;name&amp;quot;, 

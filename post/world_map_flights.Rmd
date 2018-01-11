@@ -16,8 +16,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, tidy = TRUE)
 
 Between travel and finishing up a couple of projects the past two semesters, I wasn't able to blog as much as I'd like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with [this paper](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749), though I can't seem to find a link for it online, so here it is:
 
-![flight image](/img/striking_image_world_map.png "Hypothetical flu spreading visualization")
-Anyway to begin you're going to need to download the flight and airport data from [here](https://openflights.org/data.html), which is a really amazing sight aggregating flight data and making it available for free!
+![](/img/striking_image_world_map.png "Hypothetical flu spreading visualization"){ width=100% }
+
+To start you're going to need to download the flight and airport data from [here](https://openflights.org/data.html), which is a really amazing sight aggregating flight data and making it available for free!
 
 ```{r}
 library(tidyverse)

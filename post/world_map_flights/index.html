@@ -250,7 +250,11 @@
 </div>
 
   <p>Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749">this paper</a>, though I can’t seem to find a link for it online, so here it is:</p>
-<p><img src="https://sjfox.github.io/img/striking_image_world_map.png" title="Hypothetical flu spreading visualization" alt="flight image" /> Anyway to begin you’re going to need to download the flight and airport data from <a href="https://openflights.org/data.html">here</a>, which is a really amazing sight aggregating flight data and making it available for free!</p>
+<div class="figure">
+<img src="https://sjfox.github.io/img/striking_image_world_map.png" title="Hypothetical flu spreading visualization" style="width:100.0%" />
+
+</div>
+<p>To start you’re going to need to download the flight and airport data from <a href="https://openflights.org/data.html">here</a>, which is a really amazing sight aggregating flight data and making it available for free!</p>
 <pre class="r"><code>library(tidyverse)
 
 airports &lt;- read_csv(&quot;data/flights/airports.csv&quot;, col_names = c(&quot;id&quot;, &quot;name&quot;, 
