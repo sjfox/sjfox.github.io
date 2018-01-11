@@ -250,48 +250,13 @@
 </div>
 
   <p>Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749">this paper</a>, though I can’t seem to find a link for it online, so here it is:</p>
-<div class="figure">
-<img src="static/striking_image_world_map.png" title="Hypothetical flu spreading visualization" alt="flight image" />
-<p class="caption">flight image</p>
-</div>
-<pre class="r"><code>## Data from: https://openflights.org/data.html
-library(tidyverse)</code></pre>
-<pre><code>## Loading tidyverse: ggplot2
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-## Loading tidyverse: dplyr</code></pre>
-<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
-<pre><code>## filter(): dplyr, stats
-## lag():    dplyr, stats</code></pre>
-<pre class="r"><code>airports &lt;- read_csv(&quot;data/flights/airports.csv&quot;, 
-                     col_names = c(&quot;id&quot;, &quot;name&quot;, &quot;city&quot;, &quot;country&quot;, &quot;iata&quot;, &quot;icao&quot;, &quot;lat&quot;, &quot;long&quot;,
-                                   &quot;alt&quot;, &quot;tz&quot;, &quot;dst&quot;, &quot;tz2&quot;, &quot;type&quot;, &quot;source&quot;), na = c(&quot;\\N&quot;))</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   id = col_integer(),
-##   name = col_character(),
-##   city = col_character(),
-##   country = col_character(),
-##   iata = col_character(),
-##   icao = col_character(),
-##   lat = col_double(),
-##   long = col_double(),
-##   alt = col_integer(),
-##   tz = col_double(),
-##   dst = col_character(),
-##   tz2 = col_character(),
-##   type = col_character(),
-##   source = col_character()
-## )</code></pre>
-<pre><code>## Warning in rbind(names(probs), probs_f): number of columns of result is not
-## a multiple of vector length (arg 1)</code></pre>
-<pre><code>## Warning: 12 parsing failures.
-## row # A tibble: 5 x 5 col     row   col           expected actual                        file expected   &lt;int&gt; &lt;chr&gt;              &lt;chr&gt;  &lt;chr&gt;                       &lt;chr&gt; actual 1   329  name delimiter or quote      C &#39;data/flights/airports.csv&#39; file 2   329  name delimiter or quote        &#39;data/flights/airports.csv&#39; row 3   666  name delimiter or quote      S &#39;data/flights/airports.csv&#39; col 4   666  name delimiter or quote        &#39;data/flights/airports.csv&#39; expected 5  1310  name delimiter or quote      M &#39;data/flights/airports.csv&#39;
-## ... ................. ... ................................................................... ........ ................................................................... ...... ................................................................... .... ................................................................... ... ................................................................... ... ................................................................... ........ ...................................................................
-## See problems(...) for more details.</code></pre>
-<pre class="r"><code>head(airports)</code></pre>
+<p><img src="https://sjfox.github.io/img/striking_image_world_map.png" title="Hypothetical flu spreading visualization" alt="flight image" /> Anyway to begin you’re going to need to download the flight and airport data from <a href="https://openflights.org/data.html">here</a>, which is a really amazing sight aggregating flight data and making it available for free!</p>
+<pre class="r"><code>library(tidyverse)
+
+airports &lt;- read_csv(&quot;data/flights/airports.csv&quot;, col_names = c(&quot;id&quot;, &quot;name&quot;, 
+    &quot;city&quot;, &quot;country&quot;, &quot;iata&quot;, &quot;icao&quot;, &quot;lat&quot;, &quot;long&quot;, &quot;alt&quot;, &quot;tz&quot;, &quot;dst&quot;, &quot;tz2&quot;, 
+    &quot;type&quot;, &quot;source&quot;), na = c(&quot;\\N&quot;))
+head(airports)</code></pre>
 <pre><code>## # A tibble: 6 x 14
 ##      id                                        name         city
 ##   &lt;int&gt;                                       &lt;chr&gt;        &lt;chr&gt;
@@ -304,46 +269,32 @@ library(tidyverse)</code></pre>
 ## # ... with 11 more variables: country &lt;chr&gt;, iata &lt;chr&gt;, icao &lt;chr&gt;,
 ## #   lat &lt;dbl&gt;, long &lt;dbl&gt;, alt &lt;int&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tz2 &lt;chr&gt;,
 ## #   type &lt;chr&gt;, source &lt;chr&gt;</code></pre>
-<pre class="r"><code># flights &lt;- read_csv(&quot;data/airports2/routes.csv&quot;, 
-#                     col_names = c(&quot;airline&quot;, &quot;id&quot;, &quot;src_airport&quot;, &quot;src_airport_id&quot;, &quot;dest_airport&quot;,
-#                                   &quot;dest_airport_id&quot;, &quot;codeshare&quot;, &quot;stops&quot;, &quot;equip&quot;), na = c(&quot;\\N&quot;))
-# 
-# airports &lt;- airports %&gt;% select(id, lat, long)
-# 
-# flights %&gt;% select(src_airport_id, dest_airport_id) %&gt;%
-#   filter(!is.na(src_airport_id) &amp; !is.na(dest_airport_id)) %&gt;%
-#   left_join(airports, by = c(&quot;src_airport_id&quot; = &quot;id&quot;)) %&gt;%
-#   rename(src_lat=lat, src_long=long) %&gt;%
-#   left_join(airports, by = c(&quot;dest_airport_id&quot; = &quot;id&quot;)) %&gt;%
-#   rename(dest_lat=lat, dest_long=long)  %&gt;%
-#   filter(src_airport_id != dest_airport_id) %&gt;%
-#   mutate(ordered_pair = if_else(src_airport_id &gt; dest_airport_id, 
-#                                 paste0(dest_airport_id,src_airport_id),
-#                                 paste0(src_airport_id,dest_airport_id))) %&gt;%
-#   filter(!duplicated(ordered_pair)) %&gt;%
-#   mutate(is_europe = if_else(dest_lat &lt; 60 &amp; dest_lat &gt; 25 &amp; src_lat &lt; 60 &amp; src_lat &gt; 10 &amp; 
-#                              dest_long &lt; 50 &amp; dest_long &gt; -15 &amp; src_long &lt; 50 &amp; src_long &gt; -15, TRUE,FALSE)) %&gt;%
-# filter(!is.na(is_europe)) -&gt; all_flights
-#   
-# 
-# data &lt;- map_data(&quot;world&quot;) 
-# 
-# plot_bg &lt;- data %&gt;% filter(`region` != &quot;Antarctica&quot;) %&gt;% 
-#   ggplot(aes(long, lat, group = group)) + 
-#   geom_polygon(fill=&quot;black&quot;, color = &quot;black&quot;, size=0.1) + 
-#   theme_void() + theme(plot.background=element_rect(fill=&quot;black&quot;))
-# 
-# world_map &lt;- plot_bg + 
-#   geom_polygon(fill=&quot;black&quot;, color = &quot;white&quot;, size=0.15) 
-# 
-# only_curves &lt;- plot_bg +
-#   geom_curve(data = all_flights, aes(x = src_long, xend = dest_long, 
-#                                      y = src_lat, yend = dest_lat, 
-#                                      size=is_europe, alpha=is_europe), 
-#                                      color = &quot;white&quot;, inherit.aes = FALSE) +
-#   scale_size_manual(values = c(0.05, 0.01) ) +
-#   scale_alpha_manual(values = c(0.25, 0.25) ) +
-#   theme(legend.position=&quot;none&quot;, plot.background=element_rect(fill=&quot;black&quot;))</code></pre>
+<pre class="r"><code># flights &lt;- read_csv(&#39;data/airports2/routes.csv&#39;, col_names = c(&#39;airline&#39;,
+# &#39;id&#39;, &#39;src_airport&#39;, &#39;src_airport_id&#39;, &#39;dest_airport&#39;, &#39;dest_airport_id&#39;,
+# &#39;codeshare&#39;, &#39;stops&#39;, &#39;equip&#39;), na = c(&#39;\\N&#39;)) airports &lt;- airports %&gt;%
+# select(id, lat, long) flights %&gt;% select(src_airport_id, dest_airport_id)
+# %&gt;% filter(!is.na(src_airport_id) &amp; !is.na(dest_airport_id)) %&gt;%
+# left_join(airports, by = c(&#39;src_airport_id&#39; = &#39;id&#39;)) %&gt;%
+# rename(src_lat=lat, src_long=long) %&gt;% left_join(airports, by =
+# c(&#39;dest_airport_id&#39; = &#39;id&#39;)) %&gt;% rename(dest_lat=lat, dest_long=long) %&gt;%
+# filter(src_airport_id != dest_airport_id) %&gt;% mutate(ordered_pair =
+# if_else(src_airport_id &gt; dest_airport_id,
+# paste0(dest_airport_id,src_airport_id),
+# paste0(src_airport_id,dest_airport_id))) %&gt;%
+# filter(!duplicated(ordered_pair)) %&gt;% mutate(is_europe = if_else(dest_lat
+# &lt; 60 &amp; dest_lat &gt; 25 &amp; src_lat &lt; 60 &amp; src_lat &gt; 10 &amp; dest_long &lt; 50 &amp;
+# dest_long &gt; -15 &amp; src_long &lt; 50 &amp; src_long &gt; -15, TRUE,FALSE)) %&gt;%
+# filter(!is.na(is_europe)) -&gt; all_flights data &lt;- map_data(&#39;world&#39;) plot_bg
+# &lt;- data %&gt;% filter(`region` != &#39;Antarctica&#39;) %&gt;% ggplot(aes(long, lat,
+# group = group)) + geom_polygon(fill=&#39;black&#39;, color = &#39;black&#39;, size=0.1) +
+# theme_void() + theme(plot.background=element_rect(fill=&#39;black&#39;)) world_map
+# &lt;- plot_bg + geom_polygon(fill=&#39;black&#39;, color = &#39;white&#39;, size=0.15)
+# only_curves &lt;- plot_bg + geom_curve(data = all_flights, aes(x = src_long,
+# xend = dest_long, y = src_lat, yend = dest_lat, size=is_europe,
+# alpha=is_europe), color = &#39;white&#39;, inherit.aes = FALSE) +
+# scale_size_manual(values = c(0.05, 0.01) ) + scale_alpha_manual(values =
+# c(0.25, 0.25) ) + theme(legend.position=&#39;none&#39;,
+# plot.background=element_rect(fill=&#39;black&#39;))</code></pre>
 
 
   
