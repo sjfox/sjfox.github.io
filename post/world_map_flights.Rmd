@@ -1,0 +1,67 @@
+---
+date: 2018-01-11T15:28:21-06:00
+description: ""
+draft: false
+categories: ["R"]
+tags: ["ggplot2", "R", "data_viz"]
+title: Visualizing flight data with ggplot2
+topics: []
+---
+
+Between travel and finishing up a couple of projects the past two semesters, I wasn't able to blog as much as I'd like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with [this paper](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749), though I can't seem to find a link for it online, so here it is:
+
+![alt text](static/striking_image_world_map.pdf "Hypothetical flu spreading visualization")
+
+
+```{r}
+## Data from: https://openflights.org/data.html
+library(tidyverse)
+
+airports <- read_csv("data/flights/airports.csv", 
+                     col_names = c("id", "name", "city", "country", "iata", "icao", "lat", "long",
+                                   "alt", "tz", "dst", "tz2", "type", "source"), na = c("\\N"))
+head(airports)
+# flights <- read_csv("data/airports2/routes.csv", 
+#                     col_names = c("airline", "id", "src_airport", "src_airport_id", "dest_airport",
+#                                   "dest_airport_id", "codeshare", "stops", "equip"), na = c("\\N"))
+# 
+# airports <- airports %>% select(id, lat, long)
+# 
+# flights %>% select(src_airport_id, dest_airport_id) %>%
+#   filter(!is.na(src_airport_id) & !is.na(dest_airport_id)) %>%
+#   left_join(airports, by = c("src_airport_id" = "id")) %>%
+#   rename(src_lat=lat, src_long=long) %>%
+#   left_join(airports, by = c("dest_airport_id" = "id")) %>%
+#   rename(dest_lat=lat, dest_long=long)  %>%
+#   filter(src_airport_id != dest_airport_id) %>%
+#   mutate(ordered_pair = if_else(src_airport_id > dest_airport_id, 
+#                                 paste0(dest_airport_id,src_airport_id),
+#                                 paste0(src_airport_id,dest_airport_id))) %>%
+#   filter(!duplicated(ordered_pair)) %>%
+#   mutate(is_europe = if_else(dest_lat < 60 & dest_lat > 25 & src_lat < 60 & src_lat > 10 & 
+#                              dest_long < 50 & dest_long > -15 & src_long < 50 & src_long > -15, TRUE,FALSE)) %>%
+# filter(!is.na(is_europe)) -> all_flights
+#   
+# 
+# data <- map_data("world") 
+# 
+# plot_bg <- data %>% filter(`region` != "Antarctica") %>% 
+#   ggplot(aes(long, lat, group = group)) + 
+#   geom_polygon(fill="black", color = "black", size=0.1) + 
+#   theme_void() + theme(plot.background=element_rect(fill="black"))
+# 
+# world_map <- plot_bg + 
+#   geom_polygon(fill="black", color = "white", size=0.15) 
+# 
+# only_curves <- plot_bg +
+#   geom_curve(data = all_flights, aes(x = src_long, xend = dest_long, 
+#                                      y = src_lat, yend = dest_lat, 
+#                                      size=is_europe, alpha=is_europe), 
+#                                      color = "white", inherit.aes = FALSE) +
+#   scale_size_manual(values = c(0.05, 0.01) ) +
+#   scale_alpha_manual(values = c(0.25, 0.25) ) +
+#   theme(legend.position="none", plot.background=element_rect(fill="black"))
+
+```
+
+
