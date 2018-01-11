@@ -2,79 +2,111 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Fox and the flu</title>
-    <link>https://sjfox.github.io/post/index.xml</link>
+    <link>/post/index.xml</link>
     <description>Recent content in Posts on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
     <lastBuildDate>Thu, 11 Jan 2018 15:28:21 -0600</lastBuildDate>
-    <atom:link href="https://sjfox.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Visualizing flight data with ggplot2</title>
-      <link>https://sjfox.github.io/post/world_map_flights/</link>
+      <link>/post/world_map_flights/</link>
       <pubDate>Thu, 11 Jan 2018 15:28:21 -0600</pubDate>
       
-      <guid>https://sjfox.github.io/post/world_map_flights/</guid>
+      <guid>/post/world_map_flights/</guid>
       <description>&lt;p&gt;Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with &lt;a href=&#34;http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749&#34;&gt;this paper&lt;/a&gt;, though I can’t seem to find a link for it online, so here it is:&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;https://sjfox.github.io/img/striking_image_world_map.png&#34; title=&#34;Hypothetical flu spreading visualization&#34; style=&#34;width:100.0%&#34; /&gt;
+&lt;img src=&#34;/img/striking_image_world_map.png&#34; title=&#34;Hypothetical flu spreading visualization&#34; style=&#34;width:100.0%&#34; /&gt;
 
 &lt;/div&gt;
-&lt;p&gt;To start you’re going to need to download the flight and airport data from &lt;a href=&#34;https://openflights.org/data.html&#34;&gt;here&lt;/a&gt;, which is a really amazing sight aggregating flight data and making it available for free!&lt;/p&gt;
+&lt;p&gt;To start go &lt;a href=&#34;https://openflights.org/data.html&#34;&gt;here&lt;/a&gt;, to download an amazing open flight and airport dataset. We’ll then read in the airport and flights data, and do some munging to get them in a clean format:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
 
-airports &amp;lt;- read_csv(&amp;quot;data/flights/airports.csv&amp;quot;, col_names = c(&amp;quot;id&amp;quot;, &amp;quot;name&amp;quot;, 
-    &amp;quot;city&amp;quot;, &amp;quot;country&amp;quot;, &amp;quot;iata&amp;quot;, &amp;quot;icao&amp;quot;, &amp;quot;lat&amp;quot;, &amp;quot;long&amp;quot;, &amp;quot;alt&amp;quot;, &amp;quot;tz&amp;quot;, &amp;quot;dst&amp;quot;, &amp;quot;tz2&amp;quot;, 
-    &amp;quot;type&amp;quot;, &amp;quot;source&amp;quot;), na = c(&amp;quot;\\N&amp;quot;))
-head(airports)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 14
-##      id                                        name         city
-##   &amp;lt;int&amp;gt;                                       &amp;lt;chr&amp;gt;        &amp;lt;chr&amp;gt;
-## 1     1                              Goroka Airport       Goroka
-## 2     2                              Madang Airport       Madang
-## 3     3                Mount Hagen Kagamuga Airport  Mount Hagen
-## 4     4                              Nadzab Airport       Nadzab
-## 5     5 Port Moresby Jacksons International Airport Port Moresby
-## 6     6                 Wewak International Airport        Wewak
-## # ... with 11 more variables: country &amp;lt;chr&amp;gt;, iata &amp;lt;chr&amp;gt;, icao &amp;lt;chr&amp;gt;,
-## #   lat &amp;lt;dbl&amp;gt;, long &amp;lt;dbl&amp;gt;, alt &amp;lt;int&amp;gt;, tz &amp;lt;dbl&amp;gt;, dst &amp;lt;chr&amp;gt;, tz2 &amp;lt;chr&amp;gt;,
-## #   type &amp;lt;chr&amp;gt;, source &amp;lt;chr&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# flights &amp;lt;- read_csv(&amp;#39;data/airports2/routes.csv&amp;#39;, col_names = c(&amp;#39;airline&amp;#39;,
-# &amp;#39;id&amp;#39;, &amp;#39;src_airport&amp;#39;, &amp;#39;src_airport_id&amp;#39;, &amp;#39;dest_airport&amp;#39;, &amp;#39;dest_airport_id&amp;#39;,
-# &amp;#39;codeshare&amp;#39;, &amp;#39;stops&amp;#39;, &amp;#39;equip&amp;#39;), na = c(&amp;#39;\\N&amp;#39;)) airports &amp;lt;- airports %&amp;gt;%
-# select(id, lat, long) flights %&amp;gt;% select(src_airport_id, dest_airport_id)
-# %&amp;gt;% filter(!is.na(src_airport_id) &amp;amp; !is.na(dest_airport_id)) %&amp;gt;%
-# left_join(airports, by = c(&amp;#39;src_airport_id&amp;#39; = &amp;#39;id&amp;#39;)) %&amp;gt;%
-# rename(src_lat=lat, src_long=long) %&amp;gt;% left_join(airports, by =
-# c(&amp;#39;dest_airport_id&amp;#39; = &amp;#39;id&amp;#39;)) %&amp;gt;% rename(dest_lat=lat, dest_long=long) %&amp;gt;%
-# filter(src_airport_id != dest_airport_id) %&amp;gt;% mutate(ordered_pair =
-# if_else(src_airport_id &amp;gt; dest_airport_id,
-# paste0(dest_airport_id,src_airport_id),
-# paste0(src_airport_id,dest_airport_id))) %&amp;gt;%
-# filter(!duplicated(ordered_pair)) %&amp;gt;% mutate(is_europe = if_else(dest_lat
-# &amp;lt; 60 &amp;amp; dest_lat &amp;gt; 25 &amp;amp; src_lat &amp;lt; 60 &amp;amp; src_lat &amp;gt; 10 &amp;amp; dest_long &amp;lt; 50 &amp;amp;
-# dest_long &amp;gt; -15 &amp;amp; src_long &amp;lt; 50 &amp;amp; src_long &amp;gt; -15, TRUE,FALSE)) %&amp;gt;%
-# filter(!is.na(is_europe)) -&amp;gt; all_flights data &amp;lt;- map_data(&amp;#39;world&amp;#39;) plot_bg
-# &amp;lt;- data %&amp;gt;% filter(`region` != &amp;#39;Antarctica&amp;#39;) %&amp;gt;% ggplot(aes(long, lat,
-# group = group)) + geom_polygon(fill=&amp;#39;black&amp;#39;, color = &amp;#39;black&amp;#39;, size=0.1) +
-# theme_void() + theme(plot.background=element_rect(fill=&amp;#39;black&amp;#39;)) world_map
-# &amp;lt;- plot_bg + geom_polygon(fill=&amp;#39;black&amp;#39;, color = &amp;#39;white&amp;#39;, size=0.15)
-# only_curves &amp;lt;- plot_bg + geom_curve(data = all_flights, aes(x = src_long,
-# xend = dest_long, y = src_lat, yend = dest_lat, size=is_europe,
-# alpha=is_europe), color = &amp;#39;white&amp;#39;, inherit.aes = FALSE) +
-# scale_size_manual(values = c(0.05, 0.01) ) + scale_alpha_manual(values =
-# c(0.25, 0.25) ) + theme(legend.position=&amp;#39;none&amp;#39;,
-# plot.background=element_rect(fill=&amp;#39;black&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
+airports &amp;lt;- read_csv(&amp;quot;data/flights/airports.csv&amp;quot;, 
+                     col_names = c(&amp;quot;id&amp;quot;, &amp;quot;name&amp;quot;, &amp;quot;city&amp;quot;, &amp;quot;country&amp;quot;, &amp;quot;iata&amp;quot;, &amp;quot;icao&amp;quot;, &amp;quot;lat&amp;quot;, &amp;quot;long&amp;quot;,
+                                   &amp;quot;alt&amp;quot;, &amp;quot;tz&amp;quot;, &amp;quot;dst&amp;quot;, &amp;quot;tz2&amp;quot;, &amp;quot;type&amp;quot;, &amp;quot;source&amp;quot;), na = c(&amp;quot;\\N&amp;quot;))
+flights &amp;lt;- read_csv(&amp;quot;data/flights/routes.csv&amp;quot;,
+                    col_names = c(&amp;quot;airline&amp;quot;, &amp;quot;id&amp;quot;, &amp;quot;src_airport&amp;quot;, &amp;quot;src_airport_id&amp;quot;, &amp;quot;dest_airport&amp;quot;,
+                                  &amp;quot;dest_airport_id&amp;quot;, &amp;quot;codeshare&amp;quot;, &amp;quot;stops&amp;quot;, &amp;quot;equip&amp;quot;), na = c(&amp;quot;\\N&amp;quot;))
+
+airports &amp;lt;- airports %&amp;gt;% select(id, lat, long)
+flights &amp;lt;- flights %&amp;gt;% select(src_airport_id, dest_airport_id) %&amp;gt;%
+              filter(!is.na(src_airport_id) &amp;amp; !is.na(dest_airport_id))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So you can see now that &lt;code&gt;airports&lt;/code&gt; now holds a database of airport locations with a unique identifier, and &lt;code&gt;flights&lt;/code&gt; holds a database of flights from the year, with the unique identified for the source and destination airports.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(airports)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 3
+##      id       lat    long
+##   &amp;lt;int&amp;gt;     &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;
+## 1     1 -6.081690 145.392
+## 2     2 -5.207080 145.789
+## 3     3 -5.826790 144.296
+## 4     4 -6.569803 146.726
+## 5     5 -9.443380 147.220
+## 6     6 -3.583830 143.669&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(flights)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 2
+##   src_airport_id dest_airport_id
+##            &amp;lt;int&amp;gt;           &amp;lt;int&amp;gt;
+## 1           2965            2990
+## 2           2966            2990
+## 3           2966            2962
+## 4           2968            2990
+## 5           2968            4078
+## 6           4029            2990&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we’re going to combine the two datasets, so we can plot the flights as arcs from their source to their destination. We have to do two joins, because we need the lat and long data for both the source and the destination airports. After that I create a new column that captures the source and destination airports, and remove any duplicates. Finally, I created a variable to loosely capture the flights to and from Europe, because there are a ton of flights, and I wanted to be able to make those lines slightly smaller (I’ll show what it looks like without that towards the end).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean_flights &amp;lt;- flights %&amp;gt;%  
+  left_join(airports, by = c(&amp;quot;src_airport_id&amp;quot; = &amp;quot;id&amp;quot;)) %&amp;gt;%  
+  rename(src_lat=lat, src_long=long) %&amp;gt;%  
+  left_join(airports, by = c(&amp;quot;dest_airport_id&amp;quot; = &amp;quot;id&amp;quot;)) %&amp;gt;%  
+  rename(dest_lat=lat, dest_long=long)  %&amp;gt;%  
+  filter(src_airport_id != dest_airport_id)  %&amp;gt;%
+  mutate(ordered_pair = if_else(src_airport_id &amp;gt; dest_airport_id,
+                                paste0(dest_airport_id,src_airport_id),
+                                paste0(src_airport_id,dest_airport_id))) %&amp;gt;%
+  filter(!duplicated(ordered_pair)) %&amp;gt;%
+  mutate(is_europe = if_else(dest_lat &amp;lt; 60 &amp;amp; dest_lat &amp;gt; 25 &amp;amp; src_lat &amp;lt; 60 &amp;amp; src_lat &amp;gt; 10 &amp;amp;
+                             dest_long &amp;lt; 50 &amp;amp; dest_long &amp;gt; -15 &amp;amp; src_long &amp;lt; 50 &amp;amp; src_long &amp;gt; -15, TRUE,FALSE)) %&amp;gt;%
+  filter(!is.na(is_europe))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So let’s see what these flights looks like now! I couldn’t believe how well &lt;code&gt;geom_curve()&lt;/code&gt; did exactly what I wanted it to do.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data &amp;lt;- map_data(&amp;quot;world&amp;quot;)
+
+
+data %&amp;gt;% filter(`region` != &amp;quot;Antarctica&amp;quot;) %&amp;gt;%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill=&amp;quot;black&amp;quot;, color = &amp;quot;white&amp;quot;, size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat), 
+                                         alpha=0.25, size=0.05,
+                                         color = &amp;quot;white&amp;quot;, inherit.aes = FALSE) +
+    theme_void() +
+    theme(plot.background=element_rect(fill=&amp;quot;black&amp;quot;), legend.position=&amp;quot;none&amp;quot;) +
+    coord_equal()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/world_map_flights_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;And here’s the map if we don’t change the size of the european flights, which I thought looked nicer, because you can still see Europe underneath.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data %&amp;gt;% filter(`region` != &amp;quot;Antarctica&amp;quot;) %&amp;gt;%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill=&amp;quot;black&amp;quot;, color = &amp;quot;white&amp;quot;, size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat,
+                                         size=is_europe), alpha=0.25,
+                                         color = &amp;quot;white&amp;quot;, inherit.aes = FALSE) +
+    scale_size_manual(values = c(0.05, 0.01) ) +
+    theme_void() +
+    theme(plot.background=element_rect(fill=&amp;quot;black&amp;quot;), legend.position=&amp;quot;none&amp;quot;) +
+    coord_equal()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/world_map_flights_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;After that, I brought the image into inkscape, and added in the fake “flu spreading circles” with some help from &lt;span class=&#34;citation&#34;&gt;[@chamberea]&lt;/span&gt;(&lt;a href=&#34;https://twitter.com/chamberea?lang=en&#34; class=&#34;uri&#34;&gt;https://twitter.com/chamberea?lang=en&lt;/a&gt;).&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>A pesky piping bug with RStudio and the tidyverse</title>
-      <link>https://sjfox.github.io/post/piping_bug/</link>
+      <link>/post/piping_bug/</link>
       <pubDate>Thu, 21 Sep 2017 13:25:32 -0500</pubDate>
       
-      <guid>https://sjfox.github.io/post/piping_bug/</guid>
+      <guid>/post/piping_bug/</guid>
       <description>&lt;p&gt;Today I encountered an error in the &lt;code&gt;tidyverse&lt;/code&gt; that took me a while to figure out, so I wanted to document it for others. I’m also not sure where this error originates, so I wasn’t positive which package to post it in (or with RStudio) - I’d be happy to submit a bug report if anyone can point me in the right direction :)&lt;/p&gt;
 &lt;div id=&#34;the-scenario&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;The Scenario&lt;/h2&gt;
@@ -131,10 +163,10 @@ Error in filter(x &amp;gt; 5) : object &amp;#39;x&amp;#39; not found&lt;/code&gt
     
     <item>
       <title>You should make an R package for your paper</title>
-      <link>https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/</link>
+      <link>/post/2017-05-04-rtzikvrisk_primer/</link>
       <pubDate>Wed, 10 May 2017 10:37:49 -0500</pubDate>
       
-      <guid>https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/</guid>
+      <guid>/post/2017-05-04-rtzikvrisk_primer/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab’s recent Zika paper, &lt;a href=&#34;https://bmcinfectdis.biomedcentral.com/articles/10.1186/s12879-017-2394-9&#34;&gt;Assessing Real-time Zika Risk in the United States&lt;/a&gt;. If you’re interested in learning about the content from that paper you can check out the blogpost hosted on the &lt;a href=&#34;https://blogs.biomedcentral.com/bmcseriesblog/2017/05/05/assessing-real-time-zika-risk-in-the-united-states/&#34;&gt;BMC Infectious Diseases blog&lt;/a&gt;. I’ve also given an introduction to the package on the &lt;a href=&#34;http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html&#34;&gt;rtZIKVrisk github&lt;/a&gt;. Here I wanted to talk a bit about some of the advantages of putting your papers into packages (both for yourself and other researchers).&lt;/p&gt;
@@ -158,15 +190,15 @@ Error in filter(x &amp;gt; 5) : object &amp;#39;x&amp;#39; not found&lt;/code&gt
 &lt;p&gt;From there a few lines is all that it takes to recreate any of our figures,&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    library(rtZIKVrisk)
     plot_fig2()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;or begin simulating epidemics in Texas counties.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;  set.seed(808)
   sim_parms &amp;lt;- zika_def_parms()
   outbreak_sim &amp;lt;- run_n_zika_sims(num_reps = 100, sim_parms)
   plot_final_sizes(outbreak_sim)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;  plot_zika_outbreaks(outbreak_sim)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;If they have any issues running the code, they can use the standard help functions from within R to look at the function documentation and examples.&lt;/p&gt;
 &lt;p&gt;I think this is really cool, but also realize that few people will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code &lt;code&gt;run_zika_sim()&lt;/code&gt;, and learn how to implement one for their own purposes. I know that I’ve learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.&lt;/p&gt;
 &lt;/div&gt;
@@ -181,11 +213,11 @@ Error in filter(x &amp;gt; 5) : object &amp;#39;x&amp;#39; not found&lt;/code&gt
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;travis_parms &amp;lt;- get_county_parms(&amp;quot;travis&amp;quot;)
 travis_sims &amp;lt;- run_n_zika_sims(num_reps = 1000, sim_parms)
 plot_final_sizes(travis_sims)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Plot the epidemic probablity as a function of reported cases based on simulations
 travis_epi_prob &amp;lt;- get_epidemic_prob_by_d(travis_sims, prev_threshold = 10, cum_threshold = 100)
 plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This was a cool feature that I thought (and still hope) that the people impacted by our study might be interested in seeing and exploring for themselves.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;easily-regenerate-figures&#34; class=&#34;section level2&#34;&gt;
@@ -193,7 +225,7 @@ plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Remember the last time you needed to get figures together for a presentation or poster? If you’re like me, you probably wanted to tweak things a bit from your manuscript figure. Even if you wanted to make a simple change to the text size, it probably involved digging through old R scripts, wading through code to find the right figure plots, and then praying that the code still runs. The largest benefit of having the R package for me so far, has been for easily making the figures, and if you’re going to do anything for your paper I would suggest doing this.&lt;/p&gt;
 &lt;p&gt;All of the data contained within the figures can be packaged in with the plotting functions. That means that outputting the figures is quick and foolproof, because you don’t need to regenerate the data (something I know &lt;a href=&#34;https://twitter.com/ClausWilke&#34;&gt;Claus Wilke&lt;/a&gt; has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the &lt;code&gt;save_plot()&lt;/code&gt; function from within the &lt;a href=&#34;https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html&#34;&gt;cowplot package&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    plot_fig2(panels = &amp;quot;a&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;or if you’d like to say remove one of the layers, you can customize it by looking at the layers of the ggplot and removing the layers you don’t want to be plotted. So let’s remove the points and text from the previous plot.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    p &amp;lt;- plot_fig2(panels = &amp;quot;a&amp;quot;)
     p$layers&lt;/code&gt;&lt;/pre&gt;
@@ -217,7 +249,7 @@ plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    # Remove the points and text
     p$layers[[2]] &amp;lt;- p$layers[[3]] &amp;lt;- NULL
     p&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This is a great technique for making consecutive presentation slides that add features as you go to help walk people through your results.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -243,11 +275,20 @@ plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
     </item>
     
     <item>
+      <title>temp</title>
+      <link>/post/temp/</link>
+      <pubDate>Mon, 24 Apr 2017 18:47:58 -0500</pubDate>
+      
+      <guid>/post/temp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Simple trick to speed up ODE integration in R</title>
-      <link>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
+      <link>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
       <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
+      <guid>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the &lt;code&gt;R&lt;/code&gt; environment and write &lt;code&gt;CSnippets&lt;/code&gt; for the &lt;code&gt;pomp&lt;/code&gt; package (more on this in a later blog), or to use &lt;code&gt;RCpp&lt;/code&gt;, but I used the &lt;code&gt;profvis&lt;/code&gt; package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.&lt;/p&gt;
@@ -301,7 +342,7 @@ epi_dat %&amp;gt;% head()&lt;/code&gt;&lt;/pre&gt;
 ## 6    5 0.9994000 0.0003499144 2.500909e-04&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat %&amp;gt;% gather(state, value, S:R) %&amp;gt;% ggplot(aes(time, value, color = state)) + 
     geom_line(size = 1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Let’s also confirm that both models give the same result.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat_base &amp;lt;- run_sir(init_states, times, params, sir)
 
@@ -323,7 +364,7 @@ summary(benchmark_std)&lt;/code&gt;&lt;/pre&gt;
 ## 1   100
 ## 2   100&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;autoplot(benchmark_std) + scale_y_continuous(trans = &amp;quot;identity&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Conclusions&lt;/h2&gt;
@@ -336,10 +377,10 @@ summary(benchmark_std)&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Bootstrapping Time Series Data</title>
-      <link>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</link>
+      <link>/post/2015-07-23-r-rmarkdown/</link>
       <pubDate>Sat, 23 Jul 2016 21:13:14 -0500</pubDate>
       
-      <guid>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</guid>
+      <guid>/post/2015-07-23-r-rmarkdown/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;This demonstration is part of a requirement for my statistical consulting class at UT Austin. I will go through the basics of bootstrapping time series data using three different resampling methods.&lt;/p&gt;
@@ -363,7 +404,7 @@ library(lubridate)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We will be investigating the Rio Negro river level in the &lt;code&gt;manaus&lt;/code&gt; dataset. We are interested in developing an AR(p) model to describe the river level through time. However, we are not interested in selecting the &lt;code&gt;p&lt;/code&gt; that is the best for the data, but rather understanding the full distribution of &lt;code&gt;p&lt;/code&gt; for these data, which is where the bootstrapping will come into play.&lt;/p&gt;
 &lt;p&gt;Always a good idea to see what your data look like first:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(manaus)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;creating-a-function-for-obtaining-a-test-statistic&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Creating a function for obtaining a test statistic&lt;/h1&gt;
@@ -436,14 +477,14 @@ samp_data &amp;lt;- data_frame(time = dmy(recording_dates), true = c(manaus), fi
 
 samp_data %&amp;gt;% gather(key, value, true:model_based) %&amp;gt;% ggplot(aes(time, value)) + 
     geom_line() + facet_wrap(~key)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The data look very similar to the true data, and if we didn’t know which was true, we probably wouldn’t be able to tell the difference between them, which is exactly what we’d like. Now let’s take a look at the distributions for the order parameter of the AR model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_dists &amp;lt;- data_frame(fixed = manaus_fixed$t[, 1], stationary = manaus_geom$t[, 
     1], model_based = manaus_model$t[, 1])
 
 p_dists %&amp;gt;% gather(key, value, fixed:model_based) %&amp;gt;% ggplot(aes(value)) + geom_histogram(bins = 15) + 
     facet_wrap(~key, nrow = 3)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Looks like the stationary and fixed methods give similar distributions for the order of the autoregressive model, but the model-based distribution is slightly larger. The best fit model to the original data have an order of 4, so you can see that the model-based method for resampling maintains that level of dependence between the data. However, the stationary and fixed methods reduce the dependence between the data slightly (by combining chunks of the time series at random), so the best fit order for the AR models is reduced. Overall, the model-based method appears to work best in this scenario (though there is an increased risk of model misspecification), and we get a confidence interval from 3 to 5 for the order of the model.&lt;/p&gt;
 &lt;/div&gt;
 </description>

@@ -21,13 +21,13 @@
   <!--<![endif]-->
 
   <!--[if lte IE 8]>
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
+  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
+  <link rel="stylesheet" href="/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
+  <link rel="stylesheet" href="/css/blackburn.css">
 
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -44,7 +44,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 
   
   
@@ -63,7 +63,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Spencer J Fox</a>
+  <a class="pure-menu-heading brand" href="/">Spencer J Fox</a>
 
 
   <div class="pure-menu">
@@ -71,31 +71,31 @@
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
+          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/publications/"><i class='fa fa-list fa-fw'></i>Publications</a>
+          <a class="pure-menu-link" href="/publications/"><i class='fa fa-list fa-fw'></i>Publications</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/media/"><i class='fa fa-list fa-fw'></i>In the media</a>
+          <a class="pure-menu-link" href="/media/"><i class='fa fa-list fa-fw'></i>In the media</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
+          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
       
         </li>
       
@@ -234,13 +234,13 @@
   <div>
     <i class="fa fa-tags fa-fw"></i>
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/stats">stats</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/stats">stats</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/lsoda">lsoda</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/lsoda">lsoda</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/ode">ode</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/ode">ode</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/fitting">fitting</a>
+      <a class="post-taxonomy-tag" href="/tags/fitting">fitting</a>
     
   </div>
   
@@ -301,7 +301,7 @@ epi_dat %&gt;% head()</code></pre>
 ## 6    5 0.9994000 0.0003499144 2.500909e-04</code></pre>
 <pre class="r"><code>epi_dat %&gt;% gather(state, value, S:R) %&gt;% ggplot(aes(time, value, color = state)) + 
     geom_line(size = 1)</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png" width="672" /></p>
+<p><img src="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png" width="672" /></p>
 <p>Let’s also confirm that both models give the same result.</p>
 <pre class="r"><code>epi_dat_base &lt;- run_sir(init_states, times, params, sir)
 
@@ -323,7 +323,7 @@ summary(benchmark_std)</code></pre>
 ## 1   100
 ## 2   100</code></pre>
 <pre class="r"><code>autoplot(benchmark_std) + scale_y_continuous(trans = &quot;identity&quot;)</code></pre>
-<p><img src="https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png" width="672" /></p>
+<p><img src="/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png" width="672" /></p>
 </div>
 <div id="conclusions" class="section level2">
 <h2>Conclusions</h2>
@@ -337,13 +337,13 @@ summary(benchmark_std)</code></pre>
 <div class="prev-next-post pure-g">
   <div class="pure-u-1-24" style="text-align: left;">
     
-    <a href="https://sjfox.github.io/post/2015-07-23-r-rmarkdown/"><i class="fa fa-chevron-left"></i></a>
+    <a href="/post/2015-07-23-r-rmarkdown/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
   <div class="pure-u-10-24">
     
     <nav class="prev">
-      <a href="https://sjfox.github.io/post/2015-07-23-r-rmarkdown/">Bootstrapping Time Series Data</a>
+      <a href="/post/2015-07-23-r-rmarkdown/">Bootstrapping Time Series Data</a>
     </nav>
     
   </div>
@@ -353,13 +353,13 @@ summary(benchmark_std)</code></pre>
   <div class="pure-u-10-24">
     
     <nav class="next">
-      <a href="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/">You should make an R package for your paper</a>
+      <a href="/post/temp/">temp</a>
     </nav>
     
   </div>
   <div class="pure-u-1-24" style="text-align: right;">
     
-    <a href="https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/"><i class="fa fa-chevron-right"></i></a>
+    <a href="/post/temp/"><i class="fa fa-chevron-right"></i></a>
     
   </div>
 </div>
@@ -372,7 +372,7 @@ summary(benchmark_std)</code></pre>
 
 </div>
 </div>
-<script src="https://sjfox.github.io/js/ui.js"></script>
+<script src="/js/ui.js"></script>
 
 
 <script>

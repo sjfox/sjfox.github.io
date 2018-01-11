@@ -21,13 +21,13 @@
   <!--<![endif]-->
 
   <!--[if lte IE 8]>
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu-old-ie.css">
+  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <link rel="stylesheet" href="https://sjfox.github.io/css/side-menu.css">
+  <link rel="stylesheet" href="/css/side-menu.css">
   <!--<![endif]-->
 
-  <link rel="stylesheet" href="https://sjfox.github.io/css/blackburn.css">
+  <link rel="stylesheet" href="/css/blackburn.css">
 
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -44,7 +44,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-  <link rel="shortcut icon" href="https://sjfox.github.io/img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 
   
   
@@ -63,7 +63,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="https://sjfox.github.io/">Spencer J Fox</a>
+  <a class="pure-menu-heading brand" href="/">Spencer J Fox</a>
 
 
   <div class="pure-menu">
@@ -71,31 +71,31 @@
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/about/"><i class='fa fa-user fa-fw'></i>About</a>
+          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/publications/"><i class='fa fa-list fa-fw'></i>Publications</a>
+          <a class="pure-menu-link" href="/publications/"><i class='fa fa-list fa-fw'></i>Publications</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/media/"><i class='fa fa-list fa-fw'></i>In the media</a>
+          <a class="pure-menu-link" href="/media/"><i class='fa fa-list fa-fw'></i>In the media</a>
       
         </li>
       
       
         <li class="pure-menu-item">
-          <a class="pure-menu-link" href="https://sjfox.github.io/"><i class='fa fa-home fa-fw'></i>Home</a>
+          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
       
         </li>
       
@@ -237,11 +237,11 @@
   <div>
     <i class="fa fa-tags fa-fw"></i>
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/ggplot2">ggplot2</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/ggplot2">ggplot2</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/r">R</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/r">R</a>&nbsp;&#47;
     
-      <a class="post-taxonomy-tag" href="https://sjfox.github.io/tags/data_viz">data_viz</a>
+      <a class="post-taxonomy-tag" href="/tags/data_viz">data_viz</a>
     
   </div>
   
@@ -251,67 +251,99 @@
 
   <p>Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749">this paper</a>, though I can’t seem to find a link for it online, so here it is:</p>
 <div class="figure">
-<img src="https://sjfox.github.io/img/striking_image_world_map.png" title="Hypothetical flu spreading visualization" style="width:100.0%" />
+<img src="/img/striking_image_world_map.png" title="Hypothetical flu spreading visualization" style="width:100.0%" />
 
 </div>
-<p>To start you’re going to need to download the flight and airport data from <a href="https://openflights.org/data.html">here</a>, which is a really amazing sight aggregating flight data and making it available for free!</p>
+<p>To start go <a href="https://openflights.org/data.html">here</a>, to download an amazing open flight and airport dataset. We’ll then read in the airport and flights data, and do some munging to get them in a clean format:</p>
 <pre class="r"><code>library(tidyverse)
 
-airports &lt;- read_csv(&quot;data/flights/airports.csv&quot;, col_names = c(&quot;id&quot;, &quot;name&quot;, 
-    &quot;city&quot;, &quot;country&quot;, &quot;iata&quot;, &quot;icao&quot;, &quot;lat&quot;, &quot;long&quot;, &quot;alt&quot;, &quot;tz&quot;, &quot;dst&quot;, &quot;tz2&quot;, 
-    &quot;type&quot;, &quot;source&quot;), na = c(&quot;\\N&quot;))
-head(airports)</code></pre>
-<pre><code>## # A tibble: 6 x 14
-##      id                                        name         city
-##   &lt;int&gt;                                       &lt;chr&gt;        &lt;chr&gt;
-## 1     1                              Goroka Airport       Goroka
-## 2     2                              Madang Airport       Madang
-## 3     3                Mount Hagen Kagamuga Airport  Mount Hagen
-## 4     4                              Nadzab Airport       Nadzab
-## 5     5 Port Moresby Jacksons International Airport Port Moresby
-## 6     6                 Wewak International Airport        Wewak
-## # ... with 11 more variables: country &lt;chr&gt;, iata &lt;chr&gt;, icao &lt;chr&gt;,
-## #   lat &lt;dbl&gt;, long &lt;dbl&gt;, alt &lt;int&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tz2 &lt;chr&gt;,
-## #   type &lt;chr&gt;, source &lt;chr&gt;</code></pre>
-<pre class="r"><code># flights &lt;- read_csv(&#39;data/airports2/routes.csv&#39;, col_names = c(&#39;airline&#39;,
-# &#39;id&#39;, &#39;src_airport&#39;, &#39;src_airport_id&#39;, &#39;dest_airport&#39;, &#39;dest_airport_id&#39;,
-# &#39;codeshare&#39;, &#39;stops&#39;, &#39;equip&#39;), na = c(&#39;\\N&#39;)) airports &lt;- airports %&gt;%
-# select(id, lat, long) flights %&gt;% select(src_airport_id, dest_airport_id)
-# %&gt;% filter(!is.na(src_airport_id) &amp; !is.na(dest_airport_id)) %&gt;%
-# left_join(airports, by = c(&#39;src_airport_id&#39; = &#39;id&#39;)) %&gt;%
-# rename(src_lat=lat, src_long=long) %&gt;% left_join(airports, by =
-# c(&#39;dest_airport_id&#39; = &#39;id&#39;)) %&gt;% rename(dest_lat=lat, dest_long=long) %&gt;%
-# filter(src_airport_id != dest_airport_id) %&gt;% mutate(ordered_pair =
-# if_else(src_airport_id &gt; dest_airport_id,
-# paste0(dest_airport_id,src_airport_id),
-# paste0(src_airport_id,dest_airport_id))) %&gt;%
-# filter(!duplicated(ordered_pair)) %&gt;% mutate(is_europe = if_else(dest_lat
-# &lt; 60 &amp; dest_lat &gt; 25 &amp; src_lat &lt; 60 &amp; src_lat &gt; 10 &amp; dest_long &lt; 50 &amp;
-# dest_long &gt; -15 &amp; src_long &lt; 50 &amp; src_long &gt; -15, TRUE,FALSE)) %&gt;%
-# filter(!is.na(is_europe)) -&gt; all_flights data &lt;- map_data(&#39;world&#39;) plot_bg
-# &lt;- data %&gt;% filter(`region` != &#39;Antarctica&#39;) %&gt;% ggplot(aes(long, lat,
-# group = group)) + geom_polygon(fill=&#39;black&#39;, color = &#39;black&#39;, size=0.1) +
-# theme_void() + theme(plot.background=element_rect(fill=&#39;black&#39;)) world_map
-# &lt;- plot_bg + geom_polygon(fill=&#39;black&#39;, color = &#39;white&#39;, size=0.15)
-# only_curves &lt;- plot_bg + geom_curve(data = all_flights, aes(x = src_long,
-# xend = dest_long, y = src_lat, yend = dest_lat, size=is_europe,
-# alpha=is_europe), color = &#39;white&#39;, inherit.aes = FALSE) +
-# scale_size_manual(values = c(0.05, 0.01) ) + scale_alpha_manual(values =
-# c(0.25, 0.25) ) + theme(legend.position=&#39;none&#39;,
-# plot.background=element_rect(fill=&#39;black&#39;))</code></pre>
+airports &lt;- read_csv(&quot;data/flights/airports.csv&quot;, 
+                     col_names = c(&quot;id&quot;, &quot;name&quot;, &quot;city&quot;, &quot;country&quot;, &quot;iata&quot;, &quot;icao&quot;, &quot;lat&quot;, &quot;long&quot;,
+                                   &quot;alt&quot;, &quot;tz&quot;, &quot;dst&quot;, &quot;tz2&quot;, &quot;type&quot;, &quot;source&quot;), na = c(&quot;\\N&quot;))
+flights &lt;- read_csv(&quot;data/flights/routes.csv&quot;,
+                    col_names = c(&quot;airline&quot;, &quot;id&quot;, &quot;src_airport&quot;, &quot;src_airport_id&quot;, &quot;dest_airport&quot;,
+                                  &quot;dest_airport_id&quot;, &quot;codeshare&quot;, &quot;stops&quot;, &quot;equip&quot;), na = c(&quot;\\N&quot;))
+
+airports &lt;- airports %&gt;% select(id, lat, long)
+flights &lt;- flights %&gt;% select(src_airport_id, dest_airport_id) %&gt;%
+              filter(!is.na(src_airport_id) &amp; !is.na(dest_airport_id))</code></pre>
+<p>So you can see now that <code>airports</code> now holds a database of airport locations with a unique identifier, and <code>flights</code> holds a database of flights from the year, with the unique identified for the source and destination airports.</p>
+<pre class="r"><code>head(airports)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##      id       lat    long
+##   &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1 -6.081690 145.392
+## 2     2 -5.207080 145.789
+## 3     3 -5.826790 144.296
+## 4     4 -6.569803 146.726
+## 5     5 -9.443380 147.220
+## 6     6 -3.583830 143.669</code></pre>
+<pre class="r"><code>head(flights)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   src_airport_id dest_airport_id
+##            &lt;int&gt;           &lt;int&gt;
+## 1           2965            2990
+## 2           2966            2990
+## 3           2966            2962
+## 4           2968            2990
+## 5           2968            4078
+## 6           4029            2990</code></pre>
+<p>Now we’re going to combine the two datasets, so we can plot the flights as arcs from their source to their destination. We have to do two joins, because we need the lat and long data for both the source and the destination airports. After that I create a new column that captures the source and destination airports, and remove any duplicates. Finally, I created a variable to loosely capture the flights to and from Europe, because there are a ton of flights, and I wanted to be able to make those lines slightly smaller (I’ll show what it looks like without that towards the end).</p>
+<pre class="r"><code>clean_flights &lt;- flights %&gt;%  
+  left_join(airports, by = c(&quot;src_airport_id&quot; = &quot;id&quot;)) %&gt;%  
+  rename(src_lat=lat, src_long=long) %&gt;%  
+  left_join(airports, by = c(&quot;dest_airport_id&quot; = &quot;id&quot;)) %&gt;%  
+  rename(dest_lat=lat, dest_long=long)  %&gt;%  
+  filter(src_airport_id != dest_airport_id)  %&gt;%
+  mutate(ordered_pair = if_else(src_airport_id &gt; dest_airport_id,
+                                paste0(dest_airport_id,src_airport_id),
+                                paste0(src_airport_id,dest_airport_id))) %&gt;%
+  filter(!duplicated(ordered_pair)) %&gt;%
+  mutate(is_europe = if_else(dest_lat &lt; 60 &amp; dest_lat &gt; 25 &amp; src_lat &lt; 60 &amp; src_lat &gt; 10 &amp;
+                             dest_long &lt; 50 &amp; dest_long &gt; -15 &amp; src_long &lt; 50 &amp; src_long &gt; -15, TRUE,FALSE)) %&gt;%
+  filter(!is.na(is_europe))</code></pre>
+<p>So let’s see what these flights looks like now! I couldn’t believe how well <code>geom_curve()</code> did exactly what I wanted it to do.</p>
+<pre class="r"><code>data &lt;- map_data(&quot;world&quot;)
+
+
+data %&gt;% filter(`region` != &quot;Antarctica&quot;) %&gt;%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill=&quot;black&quot;, color = &quot;white&quot;, size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat), 
+                                         alpha=0.25, size=0.05,
+                                         color = &quot;white&quot;, inherit.aes = FALSE) +
+    theme_void() +
+    theme(plot.background=element_rect(fill=&quot;black&quot;), legend.position=&quot;none&quot;) +
+    coord_equal()</code></pre>
+<p><img src="/post/world_map_flights_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>And here’s the map if we don’t change the size of the european flights, which I thought looked nicer, because you can still see Europe underneath.</p>
+<pre class="r"><code>data %&gt;% filter(`region` != &quot;Antarctica&quot;) %&gt;%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill=&quot;black&quot;, color = &quot;white&quot;, size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat,
+                                         size=is_europe), alpha=0.25,
+                                         color = &quot;white&quot;, inherit.aes = FALSE) +
+    scale_size_manual(values = c(0.05, 0.01) ) +
+    theme_void() +
+    theme(plot.background=element_rect(fill=&quot;black&quot;), legend.position=&quot;none&quot;) +
+    coord_equal()</code></pre>
+<p><img src="/post/world_map_flights_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>After that, I brought the image into inkscape, and added in the fake “flu spreading circles” with some help from <span class="citation">[@chamberea]</span>(<a href="https://twitter.com/chamberea?lang=en" class="uri">https://twitter.com/chamberea?lang=en</a>).</p>
 
 
   
 <div class="prev-next-post pure-g">
   <div class="pure-u-1-24" style="text-align: left;">
     
-    <a href="https://sjfox.github.io/post/piping_bug/"><i class="fa fa-chevron-left"></i></a>
+    <a href="/post/piping_bug/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
   <div class="pure-u-10-24">
     
     <nav class="prev">
-      <a href="https://sjfox.github.io/post/piping_bug/">A pesky piping bug with RStudio and the tidyverse</a>
+      <a href="/post/piping_bug/">A pesky piping bug with RStudio and the tidyverse</a>
     </nav>
     
   </div>
@@ -334,7 +366,7 @@ head(airports)</code></pre>
 
 </div>
 </div>
-<script src="https://sjfox.github.io/js/ui.js"></script>
+<script src="/js/ui.js"></script>
 
 
 <script>

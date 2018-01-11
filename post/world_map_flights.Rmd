@@ -9,7 +9,7 @@ topics: []
 ---
 
 ```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, tidy = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, tidy = FALSE)
 
 ```
 
@@ -18,7 +18,7 @@ Between travel and finishing up a couple of projects the past two semesters, I w
 
 ![](/img/striking_image_world_map.png "Hypothetical flu spreading visualization"){ width=100% }
 
-To start you're going to need to download the flight and airport data from [here](https://openflights.org/data.html), which is a really amazing sight aggregating flight data and making it available for free!
+To start go [here](https://openflights.org/data.html), to download an amazing open flight and airport dataset. We'll then read in the airport and flights data, and do some munging to get them in a clean format:
 
 ```{r}
 library(tidyverse)
@@ -26,48 +26,81 @@ library(tidyverse)
 airports <- read_csv("data/flights/airports.csv", 
                      col_names = c("id", "name", "city", "country", "iata", "icao", "lat", "long",
                                    "alt", "tz", "dst", "tz2", "type", "source"), na = c("\\N"))
-head(airports)
-# flights <- read_csv("data/airports2/routes.csv", 
-#                     col_names = c("airline", "id", "src_airport", "src_airport_id", "dest_airport",
-#                                   "dest_airport_id", "codeshare", "stops", "equip"), na = c("\\N"))
-# 
-# airports <- airports %>% select(id, lat, long)
-# 
-# flights %>% select(src_airport_id, dest_airport_id) %>%
-#   filter(!is.na(src_airport_id) & !is.na(dest_airport_id)) %>%
-#   left_join(airports, by = c("src_airport_id" = "id")) %>%
-#   rename(src_lat=lat, src_long=long) %>%
-#   left_join(airports, by = c("dest_airport_id" = "id")) %>%
-#   rename(dest_lat=lat, dest_long=long)  %>%
-#   filter(src_airport_id != dest_airport_id) %>%
-#   mutate(ordered_pair = if_else(src_airport_id > dest_airport_id, 
-#                                 paste0(dest_airport_id,src_airport_id),
-#                                 paste0(src_airport_id,dest_airport_id))) %>%
-#   filter(!duplicated(ordered_pair)) %>%
-#   mutate(is_europe = if_else(dest_lat < 60 & dest_lat > 25 & src_lat < 60 & src_lat > 10 & 
-#                              dest_long < 50 & dest_long > -15 & src_long < 50 & src_long > -15, TRUE,FALSE)) %>%
-# filter(!is.na(is_europe)) -> all_flights
-#   
-# 
-# data <- map_data("world") 
-# 
-# plot_bg <- data %>% filter(`region` != "Antarctica") %>% 
-#   ggplot(aes(long, lat, group = group)) + 
-#   geom_polygon(fill="black", color = "black", size=0.1) + 
-#   theme_void() + theme(plot.background=element_rect(fill="black"))
-# 
-# world_map <- plot_bg + 
-#   geom_polygon(fill="black", color = "white", size=0.15) 
-# 
-# only_curves <- plot_bg +
-#   geom_curve(data = all_flights, aes(x = src_long, xend = dest_long, 
-#                                      y = src_lat, yend = dest_lat, 
-#                                      size=is_europe, alpha=is_europe), 
-#                                      color = "white", inherit.aes = FALSE) +
-#   scale_size_manual(values = c(0.05, 0.01) ) +
-#   scale_alpha_manual(values = c(0.25, 0.25) ) +
-#   theme(legend.position="none", plot.background=element_rect(fill="black"))
+flights <- read_csv("data/flights/routes.csv",
+                    col_names = c("airline", "id", "src_airport", "src_airport_id", "dest_airport",
+                                  "dest_airport_id", "codeshare", "stops", "equip"), na = c("\\N"))
+
+airports <- airports %>% select(id, lat, long)
+flights <- flights %>% select(src_airport_id, dest_airport_id) %>%
+              filter(!is.na(src_airport_id) & !is.na(dest_airport_id))
+
 
 ```
 
+So you can see now that `airports` now holds a database of airport locations with a unique identifier, and `flights` holds a database of flights from the year, with the unique identified for the source and destination airports.
+
+```{r}
+head(airports)
+head(flights)
+
+```
+
+Now we're going to combine the two datasets, so we can plot the flights as arcs from their source to their destination. We have to do two joins, because we need the lat and long data for both the source and the destination airports. After that I create a new column that captures the source and destination airports, and remove any duplicates. Finally, I created a variable to loosely capture the flights to and from Europe, because there are a ton of flights, and I wanted to be able to make those lines slightly smaller (I'll show what it looks like without that towards the end).
+
+```{r}
+clean_flights <- flights %>%  
+  left_join(airports, by = c("src_airport_id" = "id")) %>%  
+  rename(src_lat=lat, src_long=long) %>%  
+  left_join(airports, by = c("dest_airport_id" = "id")) %>%  
+  rename(dest_lat=lat, dest_long=long)  %>%  
+  filter(src_airport_id != dest_airport_id)  %>%
+  mutate(ordered_pair = if_else(src_airport_id > dest_airport_id,
+                                paste0(dest_airport_id,src_airport_id),
+                                paste0(src_airport_id,dest_airport_id))) %>%
+  filter(!duplicated(ordered_pair)) %>%
+  mutate(is_europe = if_else(dest_lat < 60 & dest_lat > 25 & src_lat < 60 & src_lat > 10 &
+                             dest_long < 50 & dest_long > -15 & src_long < 50 & src_long > -15, TRUE,FALSE)) %>%
+  filter(!is.na(is_europe))
+
+```
+
+
+So let's see what these flights looks like now! I couldn't believe how well `geom_curve()` did exactly what I wanted it to do.
+
+```{r}
+data <- map_data("world")
+
+
+data %>% filter(`region` != "Antarctica") %>%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill="black", color = "white", size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat), 
+                                         alpha=0.25, size=0.05,
+                                         color = "white", inherit.aes = FALSE) +
+    theme_void() +
+    theme(plot.background=element_rect(fill="black"), legend.position="none") +
+    coord_equal()
+    
+
+```
+
+And here's the map if we don't change the size of the european flights, which I thought looked nicer, because you can still see Europe underneath.
+
+```{r}
+data %>% filter(`region` != "Antarctica") %>%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill="black", color = "white", size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat,
+                                         size=is_europe), alpha=0.25,
+                                         color = "white", inherit.aes = FALSE) +
+    scale_size_manual(values = c(0.05, 0.01) ) +
+    theme_void() +
+    theme(plot.background=element_rect(fill="black"), legend.position="none") +
+    coord_equal()
+
+```
+
+After that, I brought the image into inkscape, and added in the fake "flu spreading circles" with some help from [@chamberea](https://twitter.com/chamberea?lang=en).
 
