@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Rstudio on Fox and the flu</title>
-    <link>/tags/rstudio/index.xml</link>
+    <link>https://sjfox.github.io/tags/rstudio/index.xml</link>
     <description>Recent content in Rstudio on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <atom:link href="/tags/rstudio/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sjfox.github.io/tags/rstudio/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>A pesky piping bug with RStudio and the tidyverse</title>
-      <link>/post/piping_bug/</link>
+      <link>https://sjfox.github.io/post/piping_bug/</link>
       <pubDate>Thu, 21 Sep 2017 13:25:32 -0500</pubDate>
       
-      <guid>/post/piping_bug/</guid>
+      <guid>https://sjfox.github.io/post/piping_bug/</guid>
       <description>&lt;p&gt;Today I encountered an error in the &lt;code&gt;tidyverse&lt;/code&gt; that took me a while to figure out, so I wanted to document it for others. I’m also not sure where this error originates, so I wasn’t positive which package to post it in (or with RStudio) - I’d be happy to submit a bug report if anyone can point me in the right direction :)&lt;/p&gt;
 &lt;div id=&#34;the-scenario&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;The Scenario&lt;/h2&gt;

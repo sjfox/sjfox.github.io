@@ -18,7 +18,7 @@ Between travel and finishing up a couple of projects the past two semesters, I w
 
 ![](/img/striking_image_world_map.png "Hypothetical flu spreading visualization"){ width=100% }
 
-To start go [here](https://openflights.org/data.html), to download an amazing open flight and airport dataset. We'll then read in the airport and flights data, and do some munging to get them in a clean format:
+To start go [here](https://openflights.org/data.html), to download an amazing open flight and airport dataset. Then you can read in the airport and flights data, and do some munging to get them in a clean format. For the specific files I used for this visualization see [this folder](https://github.com/sjfox/sjfox.github.io/tree/master/post/data/flights).
 
 ```{r}
 library(tidyverse)
@@ -45,7 +45,7 @@ head(flights)
 
 ```
 
-Now we're going to combine the two datasets, so we can plot the flights as arcs from their source to their destination. We have to do two joins, because we need the lat and long data for both the source and the destination airports. After that I create a new column that captures the source and destination airports, and remove any duplicates. Finally, I created a variable to loosely capture the flights to and from Europe, because there are a ton of flights, and I wanted to be able to make those lines slightly smaller (I'll show what it looks like without that towards the end).
+This next part is the hard part. We need to combine and clean the two datasets. To begin we do two joins, because we need the lat and long data for both the source and the destination airports. After that I create a new column that captures the source and destination airports, remove duplicates, and create a variable to loosely capture the flights to and from Europe (You'll see why at the end).
 
 ```{r}
 clean_flights <- flights %>%  
@@ -64,12 +64,10 @@ clean_flights <- flights %>%
 
 ```
 
+Once you have that, you're basically done! Let's see what these flights looks like now! I couldn't believe how well `geom_curve()` did exactly what I wanted it to do.
 
-So let's see what these flights looks like now! I couldn't believe how well `geom_curve()` did exactly what I wanted it to do.
-
-```{r}
+```{r, cache=TRUE}
 data <- map_data("world")
-
 
 data %>% filter(`region` != "Antarctica") %>%
   ggplot(aes(long, lat, group = group)) +
@@ -85,9 +83,9 @@ data %>% filter(`region` != "Antarctica") %>%
 
 ```
 
-And here's the map if we don't change the size of the european flights, which I thought looked nicer, because you can still see Europe underneath.
+As you can see it's pretty difficult to see European countries, so here's the map if we change the size of the european flights, which I think looks nicer.
 
-```{r}
+```{r, cache=TRUE}
 data %>% filter(`region` != "Antarctica") %>%
   ggplot(aes(long, lat, group = group)) +
     geom_polygon(fill="black", color = "white", size=0.15) +
@@ -102,5 +100,5 @@ data %>% filter(`region` != "Antarctica") %>%
 
 ```
 
-After that, I brought the image into inkscape, and added in the fake "flu spreading circles" with some help from [@chamberea](https://twitter.com/chamberea?lang=en).
+After that, I brought the image into inkscape, and added in the fake "flu spreading circles" with a lot of help from the maestro, [Anne Chambers](https://eannechambers.wordpress.com/).
 
