@@ -18,8 +18,8 @@
       <guid>https://sjfox.github.io/post/world_map_flights/</guid>
       <description>&lt;p&gt;Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with &lt;a href=&#34;http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749&#34;&gt;this paper&lt;/a&gt;, though I can’t seem to find a link for it online, so here it is:&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;embed src=&#34;static/striking_image_world_map.pdf&#34; title=&#34;Hypothetical flu spreading visualization&#34; /&gt;
-&lt;p class=&#34;caption&#34;&gt;alt text&lt;/p&gt;
+&lt;img src=&#34;static/striking_image_world_map.png&#34; title=&#34;Hypothetical flu spreading visualization&#34; alt=&#34;flight image&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;flight image&lt;/p&gt;
 &lt;/div&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## Data from: https://openflights.org/data.html
 library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
