@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Fitting on Fox and the flu</title>
-    <link>https://sjfox.github.io/tags/fitting/index.xml</link>
+    <link>/tags/fitting/index.xml</link>
     <description>Recent content in Fitting on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <atom:link href="https://sjfox.github.io/tags/fitting/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/fitting/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Simple trick to speed up ODE integration in R</title>
-      <link>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
+      <link>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</link>
       <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
+      <guid>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the &lt;code&gt;R&lt;/code&gt; environment and write &lt;code&gt;CSnippets&lt;/code&gt; for the &lt;code&gt;pomp&lt;/code&gt; package (more on this in a later blog), or to use &lt;code&gt;RCpp&lt;/code&gt;, but I used the &lt;code&gt;profvis&lt;/code&gt; package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.&lt;/p&gt;
@@ -68,7 +68,7 @@ epi_dat %&amp;gt;% head()&lt;/code&gt;&lt;/pre&gt;
 ## 6    5 0.9994000 0.0003499144 2.500909e-04&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat %&amp;gt;% gather(state, value, S:R) %&amp;gt;% ggplot(aes(time, value, color = state)) + 
     geom_line(size = 1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Let’s also confirm that both models give the same result.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;epi_dat_base &amp;lt;- run_sir(init_states, times, params, sir)
 
@@ -90,7 +90,7 @@ summary(benchmark_std)&lt;/code&gt;&lt;/pre&gt;
 ## 1   100
 ## 2   100&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;autoplot(benchmark_std) + scale_y_continuous(trans = &amp;quot;identity&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Conclusions&lt;/h2&gt;

@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Rtzikvrisk on Fox and the flu</title>
-    <link>https://sjfox.github.io/tags/rtzikvrisk/index.xml</link>
+    <link>/tags/rtzikvrisk/index.xml</link>
     <description>Recent content in Rtzikvrisk on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <atom:link href="https://sjfox.github.io/tags/rtzikvrisk/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/rtzikvrisk/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>You should make an R package for your paper</title>
-      <link>https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/</link>
+      <link>/post/2017-05-04-rtzikvrisk_primer/</link>
       <pubDate>Wed, 10 May 2017 10:37:49 -0500</pubDate>
       
-      <guid>https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/</guid>
+      <guid>/post/2017-05-04-rtzikvrisk_primer/</guid>
       <description>&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab’s recent Zika paper, &lt;a href=&#34;https://bmcinfectdis.biomedcentral.com/articles/10.1186/s12879-017-2394-9&#34;&gt;Assessing Real-time Zika Risk in the United States&lt;/a&gt;. If you’re interested in learning about the content from that paper you can check out the blogpost hosted on the &lt;a href=&#34;https://blogs.biomedcentral.com/bmcseriesblog/2017/05/05/assessing-real-time-zika-risk-in-the-united-states/&#34;&gt;BMC Infectious Diseases blog&lt;/a&gt;. I’ve also given an introduction to the package on the &lt;a href=&#34;http://htmlpreview.github.io/?https://github.com/sjfox/rtZIKVrisk/blob/master/inst/doc/introduction.html&#34;&gt;rtZIKVrisk github&lt;/a&gt;. Here I wanted to talk a bit about some of the advantages of putting your papers into packages (both for yourself and other researchers).&lt;/p&gt;
@@ -38,15 +38,15 @@
 &lt;p&gt;From there a few lines is all that it takes to recreate any of our figures,&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    library(rtZIKVrisk)
     plot_fig2()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;or begin simulating epidemics in Texas counties.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;  set.seed(808)
   sim_parms &amp;lt;- zika_def_parms()
   outbreak_sim &amp;lt;- run_n_zika_sims(num_reps = 100, sim_parms)
   plot_final_sizes(outbreak_sim)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;  plot_zika_outbreaks(outbreak_sim)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-3-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;If they have any issues running the code, they can use the standard help functions from within R to look at the function documentation and examples.&lt;/p&gt;
 &lt;p&gt;I think this is really cool, but also realize that few people will ever use the simulations or analysis functions from this package. At the very least people can now look at our branching process epidemic simulation code &lt;code&gt;run_zika_sim()&lt;/code&gt;, and learn how to implement one for their own purposes. I know that I’ve learned the most about methods from papers when I can look at both the description within the paper and the actual code as well.&lt;/p&gt;
 &lt;/div&gt;
@@ -61,11 +61,11 @@
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;travis_parms &amp;lt;- get_county_parms(&amp;quot;travis&amp;quot;)
 travis_sims &amp;lt;- run_n_zika_sims(num_reps = 1000, sim_parms)
 plot_final_sizes(travis_sims)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Plot the epidemic probablity as a function of reported cases based on simulations
 travis_epi_prob &amp;lt;- get_epidemic_prob_by_d(travis_sims, prev_threshold = 10, cum_threshold = 100)
 plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-4-2.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This was a cool feature that I thought (and still hope) that the people impacted by our study might be interested in seeing and exploring for themselves.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;easily-regenerate-figures&#34; class=&#34;section level2&#34;&gt;
@@ -73,7 +73,7 @@ plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Remember the last time you needed to get figures together for a presentation or poster? If you’re like me, you probably wanted to tweak things a bit from your manuscript figure. Even if you wanted to make a simple change to the text size, it probably involved digging through old R scripts, wading through code to find the right figure plots, and then praying that the code still runs. The largest benefit of having the R package for me so far, has been for easily making the figures, and if you’re going to do anything for your paper I would suggest doing this.&lt;/p&gt;
 &lt;p&gt;All of the data contained within the figures can be packaged in with the plotting functions. That means that outputting the figures is quick and foolproof, because you don’t need to regenerate the data (something I know &lt;a href=&#34;https://twitter.com/ClausWilke&#34;&gt;Claus Wilke&lt;/a&gt; has advised in a lab meeting at some point in time). I also included the ability to plot only single panels from the multi-panel plots, which will help make presentation slides without having to clip out the letters or worry about resolution. You could further change the text size and ratios using the &lt;code&gt;save_plot()&lt;/code&gt; function from within the &lt;a href=&#34;https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html&#34;&gt;cowplot package&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    plot_fig2(panels = &amp;quot;a&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;or if you’d like to say remove one of the layers, you can customize it by looking at the layers of the ggplot and removing the layers you don’t want to be plotted. So let’s remove the points and text from the previous plot.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    p &amp;lt;- plot_fig2(panels = &amp;quot;a&amp;quot;)
     p$layers&lt;/code&gt;&lt;/pre&gt;
@@ -97,7 +97,7 @@ plot_epi_prob(travis_epi_prob)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;    # Remove the points and text
     p$layers[[2]] &amp;lt;- p$layers[[3]] &amp;lt;- NULL
     p&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-05-04-rtzikvrisk_primer_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This is a great technique for making consecutive presentation slides that add features as you go to help walk people through your results.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
