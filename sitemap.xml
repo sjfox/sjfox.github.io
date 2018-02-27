@@ -2,153 +2,148 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>/post/world_map_flights/</loc>
+    <loc>https://sjfox.github.io/post/world_map_flights/</loc>
     <lastmod>2018-01-11T15:28:21-06:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/piping_bug/</loc>
+    <loc>https://sjfox.github.io/post/piping_bug/</loc>
     <lastmod>2017-09-21T13:25:32-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/media/</loc>
+    <loc>https://sjfox.github.io/media/</loc>
     <lastmod>2017-06-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/2017-05-04-rtzikvrisk_primer/</loc>
+    <loc>https://sjfox.github.io/post/2017-05-04-rtzikvrisk_primer/</loc>
     <lastmod>2017-05-10T10:37:49-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/publications/</loc>
+    <loc>https://sjfox.github.io/publications/</loc>
     <lastmod>2017-05-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/temp/</loc>
-    <lastmod>2017-04-24T18:47:58-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</loc>
+    <loc>https://sjfox.github.io/post/2017-04-19-timesteps-lsoda-and-epidemiological-models/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/about/</loc>
+    <loc>https://sjfox.github.io/about/</loc>
     <lastmod>2017-03-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/2015-07-23-r-rmarkdown/</loc>
+    <loc>https://sjfox.github.io/post/2015-07-23-r-rmarkdown/</loc>
     <lastmod>2016-07-23T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/blog/</loc>
+    <loc>https://sjfox.github.io/tags/blog/</loc>
     <lastmod>2017-05-10T10:37:49-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/bootstrap/</loc>
+    <loc>https://sjfox.github.io/tags/bootstrap/</loc>
     <lastmod>2016-07-23T21:13:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/data_viz/</loc>
+    <loc>https://sjfox.github.io/tags/data_viz/</loc>
     <lastmod>2018-01-11T15:28:21-06:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/debugging/</loc>
+    <loc>https://sjfox.github.io/tags/debugging/</loc>
     <lastmod>2017-09-21T13:25:32-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/fitting/</loc>
+    <loc>https://sjfox.github.io/tags/fitting/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>https://sjfox.github.io/</loc>
     <lastmod>2018-01-11T15:28:21-06:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/ggplot2/</loc>
+    <loc>https://sjfox.github.io/tags/ggplot2/</loc>
     <lastmod>2018-01-11T15:28:21-06:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/lsoda/</loc>
+    <loc>https://sjfox.github.io/tags/lsoda/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/ode/</loc>
+    <loc>https://sjfox.github.io/tags/ode/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/post/</loc>
+    <loc>https://sjfox.github.io/post/</loc>
     <lastmod>2018-01-11T15:28:21-06:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/r/</loc>
+    <loc>https://sjfox.github.io/tags/r/</loc>
     <lastmod>2018-01-11T15:28:21-06:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/r-markdown/</loc>
+    <loc>https://sjfox.github.io/tags/r-markdown/</loc>
     <lastmod>2016-07-23T21:13:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/r-package/</loc>
+    <loc>https://sjfox.github.io/tags/r-package/</loc>
     <lastmod>2017-05-10T10:37:49-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/rstudio/</loc>
+    <loc>https://sjfox.github.io/tags/rstudio/</loc>
     <lastmod>2017-09-21T13:25:32-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/rtzikvrisk/</loc>
+    <loc>https://sjfox.github.io/tags/rtzikvrisk/</loc>
     <lastmod>2017-05-10T10:37:49-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/stats/</loc>
+    <loc>https://sjfox.github.io/tags/stats/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>https://sjfox.github.io/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/tidyverse/</loc>
+    <loc>https://sjfox.github.io/tags/tidyverse/</loc>
     <lastmod>2017-09-21T13:25:32-05:00</lastmod>
     <priority>0</priority>
   </url>

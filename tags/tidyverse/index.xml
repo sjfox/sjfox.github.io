@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tidyverse on Fox and the flu</title>
-    <link>/tags/tidyverse/index.xml</link>
+    <link>https://sjfox.github.io/tags/tidyverse/index.xml</link>
     <description>Recent content in Tidyverse on Fox and the flu</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <atom:link href="/tags/tidyverse/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://sjfox.github.io/tags/tidyverse/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>A pesky piping bug with RStudio and the tidyverse</title>
-      <link>/post/piping_bug/</link>
+      <link>https://sjfox.github.io/post/piping_bug/</link>
       <pubDate>Thu, 21 Sep 2017 13:25:32 -0500</pubDate>
       
-      <guid>/post/piping_bug/</guid>
+      <guid>https://sjfox.github.io/post/piping_bug/</guid>
       <description>&lt;p&gt;Today I encountered an error in the &lt;code&gt;tidyverse&lt;/code&gt; that took me a while to figure out, so I wanted to document it for others. I’m also not sure where this error originates, so I wasn’t positive which package to post it in (or with RStudio) - I’d be happy to submit a bug report if anyone can point me in the right direction :)&lt;/p&gt;
 &lt;div id=&#34;the-scenario&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;The Scenario&lt;/h2&gt;
@@ -28,11 +28,11 @@ data_frame(x=1:10)  %&amp;gt;%
 &lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 3
 ##       x    x2    x3
 ##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
-## 1     6    12    18
-## 2     7    14    21
-## 3     8    16    24
-## 4     9    18    27
-## 5    10    20    30&lt;/code&gt;&lt;/pre&gt;
+## 1     6  12.0  18.0
+## 2     7  14.0  21.0
+## 3     8  16.0  24.0
+## 4     9  18.0  27.0
+## 5    10  20.0  30.0&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Those lines work no matter how you run them. However, let’s say we no longer want to make the &lt;code&gt;x2&lt;/code&gt; column, so we comment out the line to potentially save it for later if we change our minds:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data_frame(x=1:10)  %&amp;gt;%  
   mutate(# x2 = x*2,  
@@ -55,11 +55,11 @@ Error in filter(x &amp;gt; 5) : object &amp;#39;x&amp;#39; not found&lt;/code&gt
 &lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 3
 ##       x    x1    x3
 ##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
-## 1     6     6    18
-## 2     7     7    21
-## 3     8     8    24
-## 4     9     9    27
-## 5    10    10    30&lt;/code&gt;&lt;/pre&gt;
+## 1     6  6.00  18.0
+## 2     7  7.00  21.0
+## 3     8  8.00  24.0
+## 4     9  9.00  27.0
+## 5    10 10.0   30.0&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;So it appears it is dependent on the &lt;code&gt;#&lt;/code&gt; being directly after the function, maybe? I haven’t gone through all iterations to more fully understand it.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
