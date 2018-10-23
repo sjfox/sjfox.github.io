@@ -38,12 +38,12 @@ flights &amp;lt;- flights %&amp;gt;% select(src_airport_id, dest_airport_id) %&a
 &lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 3
 ##      id   lat  long
 ##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
-## 1     1 -6.08   145
-## 2     2 -5.21   146
-## 3     3 -5.83   144
-## 4     4 -6.57   147
-## 5     5 -9.44   147
-## 6     6 -3.58   144&lt;/code&gt;&lt;/pre&gt;
+## 1     1 -6.08  145.
+## 2     2 -5.21  146.
+## 3     3 -5.83  144.
+## 4     4 -6.57  147.
+## 5     5 -9.44  147.
+## 6     6 -3.58  144.&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(flights)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 2
 ##   src_airport_id dest_airport_id

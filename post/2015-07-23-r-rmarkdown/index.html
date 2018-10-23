@@ -275,9 +275,11 @@ library(lubridate)</code></pre>
 <h1>Creating a function for obtaining a test statistic</h1>
 <p>The <code>boot</code> package requires a function that returns your statistic of interest for any data supplied. We will create a function that finds the maximum likelihood order (p) for a time series that is supplied as <code>tsb</code>. We return the best fit order, the mean of the time-series, and then the whole time series data, as a means to extract this information later. Really you would only need to return the statistic itself depending on your goals.</p>
 <pre class="r"><code>manaus_fun &lt;- function(tsb) {
-    ar.fit &lt;- auto.arima(tsb, max.p = 25, max.d = 0, max.q = 0, max.P = 0, max.Q = 0, 
-        max.D = 0, ic = &quot;aic&quot;, max.order = 25, seasonal = FALSE)
-    c(ar.fit$arma[1], mean(tsb), tsb)
+     ar.fit &lt;- auto.arima(tsb, max.p=25, max.d=0, 
+                          max.q=0, max.P=0, max.Q=0, max.D=0, ic = &quot;aic&quot;,
+                          max.order=25,
+                          seasonal = FALSE)
+     c(ar.fit$arma[1], mean(tsb), tsb)
 }</code></pre>
 </div>
 <div id="bootstrapping-the-statistic" class="section level1">
@@ -306,8 +308,10 @@ manaus_geom &lt;- tsboot(manaus, manaus_fun, R = num_resamples, l = block_length
 <p>For model-based resampling, the trick is to use your model to generate new time series, and adding noise with the resampled residuals from the fit. This method is particularly risky if you are not entirely sure about the underlying model for your data.</p>
 <p>We first have to fit the model, and extract the residuals from the model. Then we create a function that can simulate arima models according to our fit model. The <code>rand.gen</code> argument to the arima.sim function is the most important for determining the resampling of the residuals, as the new innovations for simulating time series.</p>
 <pre class="r"><code>## First fit the model
-manaus_ar &lt;- auto.arima(manaus, max.p = 25, max.d = 0, max.q = 0, max.P = 0, 
-    max.Q = 0, max.D = 0, ic = &quot;aic&quot;, max.order = 25, seasonal = FALSE)
+manaus_ar &lt;- auto.arima(manaus, max.p=25, max.d=0, 
+                          max.q=0, max.P=0, max.Q=0, max.D=0, ic = &quot;aic&quot;,
+                          max.order=25,
+                          seasonal = FALSE)
 
 ## Create list containing the components of fit model
 manaus_mod &lt;- list(order = c(manaus_ar$arma[1], 0, 0), ar = coef(manaus_ar))
@@ -317,12 +321,11 @@ manaus_res &lt;- resid(manaus_ar) - mean(resid(manaus_ar))
 
 ## Simulation function for simulating
 manaus_sim &lt;- function(res, n.sim, ran.args) {
-    # random generation of replicate series using arima.sim
-    rg1 &lt;- function(n, res) sample(res, n, replace = TRUE)
-    ts.orig &lt;- ran.args$ts
-    ts.mod &lt;- ran.args$model
-    mean(ts.orig) + ts(arima.sim(model = ts.mod, n = n.sim, rand.gen = rg1, 
-        res = as.vector(res)))
+     # random generation of replicate series using arima.sim 
+     rg1 &lt;- function(n, res) sample(res, n, replace = TRUE)
+     ts.orig &lt;- ran.args$ts
+     ts.mod &lt;- ran.args$model
+     mean(ts.orig) + ts(arima.sim(model = ts.mod, n = n.sim, rand.gen = rg1, res = as.vector(res)))
 }</code></pre>
 <p>Once we’ve setup the time-series simulation framework, we can once again use the <code>tsboot</code> function with a few added arguments.</p>
 <pre class="r"><code>manaus_model &lt;- tsboot(manaus_res, manaus_fun, R = num_resamples, sim = &quot;model&quot;, 

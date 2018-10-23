@@ -39,12 +39,12 @@ flights &amp;lt;- flights %&amp;gt;% select(src_airport_id, dest_airport_id) %&a
 &lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 3
 ##      id   lat  long
 ##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
-## 1     1 -6.08   145
-## 2     2 -5.21   146
-## 3     3 -5.83   144
-## 4     4 -6.57   147
-## 5     5 -9.44   147
-## 6     6 -3.58   144&lt;/code&gt;&lt;/pre&gt;
+## 1     1 -6.08  145.
+## 2     2 -5.21  146.
+## 3     3 -5.83  144.
+## 4     4 -6.57  147.
+## 5     5 -9.44  147.
+## 6     6 -3.58  144.&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(flights)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 2
 ##   src_airport_id dest_airport_id
@@ -119,11 +119,11 @@ data_frame(x=1:10)  %&amp;gt;%
 &lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 3
 ##       x    x2    x3
 ##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
-## 1     6  12.0  18.0
-## 2     7  14.0  21.0
-## 3     8  16.0  24.0
-## 4     9  18.0  27.0
-## 5    10  20.0  30.0&lt;/code&gt;&lt;/pre&gt;
+## 1     6    12    18
+## 2     7    14    21
+## 3     8    16    24
+## 4     9    18    27
+## 5    10    20    30&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Those lines work no matter how you run them. However, let’s say we no longer want to make the &lt;code&gt;x2&lt;/code&gt; column, so we comment out the line to potentially save it for later if we change our minds:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data_frame(x=1:10)  %&amp;gt;%  
   mutate(# x2 = x*2,  
@@ -146,11 +146,11 @@ Error in filter(x &amp;gt; 5) : object &amp;#39;x&amp;#39; not found&lt;/code&gt
 &lt;pre&gt;&lt;code&gt;## # A tibble: 5 x 3
 ##       x    x1    x3
 ##   &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
-## 1     6  6.00  18.0
-## 2     7  7.00  21.0
-## 3     8  8.00  24.0
-## 4     9  9.00  27.0
-## 5    10 10.0   30.0&lt;/code&gt;&lt;/pre&gt;
+## 1     6     6    18
+## 2     7     7    21
+## 3     8     8    24
+## 4     9     9    27
+## 5    10    10    30&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;So it appears it is dependent on the &lt;code&gt;#&lt;/code&gt; being directly after the function, maybe? I haven’t gone through all iterations to more fully understand it.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
@@ -400,9 +400,11 @@ library(lubridate)&lt;/code&gt;&lt;/pre&gt;
 &lt;h1&gt;Creating a function for obtaining a test statistic&lt;/h1&gt;
 &lt;p&gt;The &lt;code&gt;boot&lt;/code&gt; package requires a function that returns your statistic of interest for any data supplied. We will create a function that finds the maximum likelihood order (p) for a time series that is supplied as &lt;code&gt;tsb&lt;/code&gt;. We return the best fit order, the mean of the time-series, and then the whole time series data, as a means to extract this information later. Really you would only need to return the statistic itself depending on your goals.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;manaus_fun &amp;lt;- function(tsb) {
-    ar.fit &amp;lt;- auto.arima(tsb, max.p = 25, max.d = 0, max.q = 0, max.P = 0, max.Q = 0, 
-        max.D = 0, ic = &amp;quot;aic&amp;quot;, max.order = 25, seasonal = FALSE)
-    c(ar.fit$arma[1], mean(tsb), tsb)
+     ar.fit &amp;lt;- auto.arima(tsb, max.p=25, max.d=0, 
+                          max.q=0, max.P=0, max.Q=0, max.D=0, ic = &amp;quot;aic&amp;quot;,
+                          max.order=25,
+                          seasonal = FALSE)
+     c(ar.fit$arma[1], mean(tsb), tsb)
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;bootstrapping-the-statistic&#34; class=&#34;section level1&#34;&gt;
@@ -431,8 +433,10 @@ manaus_geom &amp;lt;- tsboot(manaus, manaus_fun, R = num_resamples, l = block_le
 &lt;p&gt;For model-based resampling, the trick is to use your model to generate new time series, and adding noise with the resampled residuals from the fit. This method is particularly risky if you are not entirely sure about the underlying model for your data.&lt;/p&gt;
 &lt;p&gt;We first have to fit the model, and extract the residuals from the model. Then we create a function that can simulate arima models according to our fit model. The &lt;code&gt;rand.gen&lt;/code&gt; argument to the arima.sim function is the most important for determining the resampling of the residuals, as the new innovations for simulating time series.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## First fit the model
-manaus_ar &amp;lt;- auto.arima(manaus, max.p = 25, max.d = 0, max.q = 0, max.P = 0, 
-    max.Q = 0, max.D = 0, ic = &amp;quot;aic&amp;quot;, max.order = 25, seasonal = FALSE)
+manaus_ar &amp;lt;- auto.arima(manaus, max.p=25, max.d=0, 
+                          max.q=0, max.P=0, max.Q=0, max.D=0, ic = &amp;quot;aic&amp;quot;,
+                          max.order=25,
+                          seasonal = FALSE)
 
 ## Create list containing the components of fit model
 manaus_mod &amp;lt;- list(order = c(manaus_ar$arma[1], 0, 0), ar = coef(manaus_ar))
@@ -442,12 +446,11 @@ manaus_res &amp;lt;- resid(manaus_ar) - mean(resid(manaus_ar))
 
 ## Simulation function for simulating
 manaus_sim &amp;lt;- function(res, n.sim, ran.args) {
-    # random generation of replicate series using arima.sim
-    rg1 &amp;lt;- function(n, res) sample(res, n, replace = TRUE)
-    ts.orig &amp;lt;- ran.args$ts
-    ts.mod &amp;lt;- ran.args$model
-    mean(ts.orig) + ts(arima.sim(model = ts.mod, n = n.sim, rand.gen = rg1, 
-        res = as.vector(res)))
+     # random generation of replicate series using arima.sim 
+     rg1 &amp;lt;- function(n, res) sample(res, n, replace = TRUE)
+     ts.orig &amp;lt;- ran.args$ts
+     ts.mod &amp;lt;- ran.args$model
+     mean(ts.orig) + ts(arima.sim(model = ts.mod, n = n.sim, rand.gen = rg1, res = as.vector(res)))
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Once we’ve setup the time-series simulation framework, we can once again use the &lt;code&gt;tsboot&lt;/code&gt; function with a few added arguments.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;manaus_model &amp;lt;- tsboot(manaus_res, manaus_fun, R = num_resamples, sim = &amp;quot;model&amp;quot;, 
