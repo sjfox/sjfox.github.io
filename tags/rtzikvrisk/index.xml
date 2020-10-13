@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rtZIKVrisk on </title>
+    <link>https://sjfox.github.io/tags/rtzikvrisk/</link>
+    <description>Recent content in rtZIKVrisk on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Wed, 10 May 2017 10:37:49 -0500</lastBuildDate><atom:link href="https://sjfox.github.io/tags/rtzikvrisk/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>You should make an R package for your paper</title>
+      <link>https://sjfox.github.io/p/you-should-make-an-r-package-for-your-paper/</link>
+      <pubDate>Wed, 10 May 2017 10:37:49 -0500</pubDate>
+      
+      <guid>https://sjfox.github.io/p/you-should-make-an-r-package-for-your-paper/</guid>
+      <description>Introduction I had wanted to get into R package creation for a while now, but finally got a chance to do so for my lab’s recent Zika paper, Assessing Real-time Zika Risk in the United States. If you’re interested in learning about the content from that paper you can check out the blogpost hosted on the BMC Infectious Diseases blog. I’ve also given an introduction to the package on the rtZIKVrisk github.</description>
+    </item>
+    
+  </channel>
+</rss>

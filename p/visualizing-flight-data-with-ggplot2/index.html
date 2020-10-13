@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with this paper, though I can’t seem to find a link for it online, so here it is:'><title>Visualizing flight data with ggplot2</title>
+    
+    <link rel='canonical' href='https://sjfox.github.io/p/visualizing-flight-data-with-ggplot2/'>
+
+<link rel="stylesheet" href="https://sjfox.github.io/scss/style.min.css"><meta property='og:title' content='Visualizing flight data with ggplot2'>
+<meta property='og:description' content='Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with this paper, though I can’t seem to find a link for it online, so here it is:'>
+<meta property='og:url' content='https://sjfox.github.io/p/visualizing-flight-data-with-ggplot2/'>
+<meta property='og:site_name' content=''>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='ggplot2' /><meta property='article:tag' content='R' /><meta property='article:tag' content='data_viz' /><meta property='article:published_time' content='2018-01-11T15:28:21-06:00'/><meta property='article:modified_time' content='2018-01-11T15:28:21-06:00'/><meta property='og:image' content='https://sjfox.github.io/img/striking_image_world_map.png' />
+<meta name="twitter:title" content="Visualizing flight data with ggplot2">
+<meta name="twitter:description" content="Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with this paper, though I can’t seem to find a link for it online, so here it is:"><meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content='https://sjfox.github.io/img/striking_image_world_map.png' /></head><body class="">
+        <div class="container flex on-phone--column align-items--flex-start extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+
+                
+                    
+                    <img src="https://sjfox.github.io/img/fox_profile_hu6f5f2015657e98f11d1e40ee1dab7bac_1733550_300x300_resize_box_2.png" width="300"
+                        height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                <span class="emoji">🦠</span>
+            </figure>
+        
+        <h1 class="site-name"><a href="https://sjfox.github.io/"></a></h1>
+        <h2 class="site-description">A personal website and rstats blog</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/about'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/publications'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>Publications</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/media'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>Media</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/archives'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+    </ol>
+</aside>
+            <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://sjfox.github.io/" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            
+                <img src="https://sjfox.github.io/img/striking_image_world_map.png" loading="lazy" alt="Featured image of post Visualizing flight data with ggplot2" />
+            
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+                <a href="https://sjfox.github.io/categories/r/">R</a>
+            
+        
+            
+                <a href="https://sjfox.github.io/categories/maps/">maps</a>
+            
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="https://sjfox.github.io/p/visualizing-flight-data-with-ggplot2/">Visualizing flight data with ggplot2</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">Jan 11, 2018</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    
+
+
+<p>Between travel and finishing up a couple of projects the past two semesters, I wasn’t able to blog as much as I’d like. Rather than jumping straing into research after the holidays, it seemed like a nice time to blog about my favorite figure from the past semester. It was the striking image associated with <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005749">this paper</a>, though I can’t seem to find a link for it online, so here it is:</p>
+<p><img src="https://sjfox.github.io/img/striking_image_world_map.png" title="Hypothetical flu spreading visualization" style="width:100.0%" /></p>
+<p>To start go <a href="https://openflights.org/data.html">here</a>, to download an amazing open flight and airport dataset. Then you can read in the airport and flights data, and do some munging to get them in a clean format. For the specific files I used for this visualization see <a href="https://github.com/sjfox/sjfox.github.io/tree/master/post/data/flights">this folder</a>.</p>
+<pre class="r"><code>library(tidyverse)
+
+airports &lt;- read_csv(&quot;data/flights/airports.csv&quot;, 
+                     col_names = c(&quot;id&quot;, &quot;name&quot;, &quot;city&quot;, &quot;country&quot;, &quot;iata&quot;, &quot;icao&quot;, &quot;lat&quot;, &quot;long&quot;,
+                                   &quot;alt&quot;, &quot;tz&quot;, &quot;dst&quot;, &quot;tz2&quot;, &quot;type&quot;, &quot;source&quot;), na = c(&quot;\\N&quot;))
+flights &lt;- read_csv(&quot;data/flights/routes.csv&quot;,
+                    col_names = c(&quot;airline&quot;, &quot;id&quot;, &quot;src_airport&quot;, &quot;src_airport_id&quot;, &quot;dest_airport&quot;,
+                                  &quot;dest_airport_id&quot;, &quot;codeshare&quot;, &quot;stops&quot;, &quot;equip&quot;), na = c(&quot;\\N&quot;))
+
+airports &lt;- airports %&gt;% select(id, lat, long)
+flights &lt;- flights %&gt;% select(src_airport_id, dest_airport_id) %&gt;%
+              filter(!is.na(src_airport_id) &amp; !is.na(dest_airport_id))</code></pre>
+<p>So you can see now that <code>airports</code> now holds a database of airport locations with a unique identifier, and <code>flights</code> holds a database of flights from the year, with the unique identified for the source and destination airports.</p>
+<pre class="r"><code>head(airports)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##      id   lat  long
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1 -6.08  145.
+## 2     2 -5.21  146.
+## 3     3 -5.83  144.
+## 4     4 -6.57  147.
+## 5     5 -9.44  147.
+## 6     6 -3.58  144.</code></pre>
+<pre class="r"><code>head(flights)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   src_airport_id dest_airport_id
+##            &lt;dbl&gt;           &lt;dbl&gt;
+## 1           2965            2990
+## 2           2966            2990
+## 3           2966            2962
+## 4           2968            2990
+## 5           2968            4078
+## 6           4029            2990</code></pre>
+<p>This next part is the hard part. We need to combine and clean the two datasets. To begin we do two joins, because we need the lat and long data for both the source and the destination airports. After that I create a new column that captures the source and destination airports, remove duplicates, and create a variable to loosely capture the flights to and from Europe (You’ll see why at the end).</p>
+<pre class="r"><code>clean_flights &lt;- flights %&gt;%  
+  left_join(airports, by = c(&quot;src_airport_id&quot; = &quot;id&quot;)) %&gt;%  
+  rename(src_lat=lat, src_long=long) %&gt;%  
+  left_join(airports, by = c(&quot;dest_airport_id&quot; = &quot;id&quot;)) %&gt;%  
+  rename(dest_lat=lat, dest_long=long)  %&gt;%  
+  filter(src_airport_id != dest_airport_id)  %&gt;%
+  mutate(ordered_pair = if_else(src_airport_id &gt; dest_airport_id,
+                                paste0(dest_airport_id,src_airport_id),
+                                paste0(src_airport_id,dest_airport_id))) %&gt;%
+  filter(!duplicated(ordered_pair)) %&gt;%
+  mutate(is_europe = if_else(dest_lat &lt; 60 &amp; dest_lat &gt; 25 &amp; src_lat &lt; 60 &amp; src_lat &gt; 10 &amp;
+                             dest_long &lt; 50 &amp; dest_long &gt; -15 &amp; src_long &lt; 50 &amp; src_long &gt; -15, TRUE,FALSE)) %&gt;%
+  filter(!is.na(is_europe))</code></pre>
+<p>Once you have that, you’re basically done! Let’s see what these flights looks like now! I couldn’t believe how well <code>geom_curve()</code> did exactly what I wanted it to do.</p>
+<pre class="r"><code>data &lt;- map_data(&quot;world&quot;)
+
+data %&gt;% filter(`region` != &quot;Antarctica&quot;) %&gt;%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill=&quot;black&quot;, color = &quot;white&quot;, size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat), 
+                                         alpha=0.25, size=0.05,
+                                         color = &quot;white&quot;, inherit.aes = FALSE) +
+    theme_void() +
+    theme(plot.background=element_rect(fill=&quot;black&quot;), legend.position=&quot;none&quot;) +
+    coord_equal()</code></pre>
+<p><img src="https://sjfox.github.io/post/flight-risk/world_map_flights_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>As you can see it’s pretty difficult to see European countries, so here’s the map if we change the size of the european flights, which I think looks nicer.</p>
+<pre class="r"><code>data %&gt;% filter(`region` != &quot;Antarctica&quot;) %&gt;%
+  ggplot(aes(long, lat, group = group)) +
+    geom_polygon(fill=&quot;black&quot;, color = &quot;white&quot;, size=0.15) +
+    geom_curve(data = clean_flights, aes(x = src_long, xend = dest_long,
+                                         y = src_lat,  yend = dest_lat,
+                                         size=is_europe), alpha=0.25,
+                                         color = &quot;white&quot;, inherit.aes = FALSE) +
+    scale_size_manual(values = c(0.05, 0.01) ) +
+    theme_void() +
+    theme(plot.background=element_rect(fill=&quot;black&quot;), legend.position=&quot;none&quot;) +
+    coord_equal()</code></pre>
+<p><img src="https://sjfox.github.io/post/flight-risk/world_map_flights_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>After that, I brought the image into inkscape, and added in the fake “flu spreading circles” with a lot of help from the maestro, <a href="https://eannechambers.wordpress.com/">Anne Chambers</a>.</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://sjfox.github.io/tags/ggplot2/">ggplot2</a>
+        
+            <a href="https://sjfox.github.io/tags/r/">R</a>
+        
+            <a href="https://sjfox.github.io/tags/data_viz/">data_viz</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="https://sjfox.github.io/p/you-should-make-an-r-package-for-your-paper/">
+        
+        
+            <div class="article-image">
+                
+                    <img src="https://sjfox.github.io/img/fig4.png" loading="lazy" data-key="" data-hash="/img/fig4.png"/>
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">You should make an R package for your paper</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="https://sjfox.github.io/p/simple-trick-to-speed-up-ode-integration-in-r/">
+        
+        
+            <div class="article-image">
+                
+                    <img src="https://sjfox.github.io/img/ode-sim-basic.png" loading="lazy" data-key="" data-hash="/img/ode-sim-basic.png"/>
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Simple trick to speed up ODE integration in R</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+    
+        
+    <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">&copy; 2020 </section>
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="1.0.5">Stack</a></b> designed by
+        <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" style="display:none">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"
+    integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin="anonymous"></script><script type="text/javascript" src="https://sjfox.github.io/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<link rel="stylesheet" href="https://sjfox.github.io/css/highlight/light.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://sjfox.github.io/css/highlight/dark.min.css" media="(prefers-color-scheme: dark)">
+
+    </body>
+</html>

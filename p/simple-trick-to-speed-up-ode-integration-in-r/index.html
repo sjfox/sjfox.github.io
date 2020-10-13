@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Introduction I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the R environment and write CSnippets for the pomp package (more on this in a later blog), or to use RCpp, but I used the profvis package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.'><title>Simple trick to speed up ODE integration in R</title>
+    
+    <link rel='canonical' href='https://sjfox.github.io/p/simple-trick-to-speed-up-ode-integration-in-r/'>
+
+<link rel="stylesheet" href="https://sjfox.github.io/scss/style.min.css"><meta property='og:title' content='Simple trick to speed up ODE integration in R'>
+<meta property='og:description' content='Introduction I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the R environment and write CSnippets for the pomp package (more on this in a later blog), or to use RCpp, but I used the profvis package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.'>
+<meta property='og:url' content='https://sjfox.github.io/p/simple-trick-to-speed-up-ode-integration-in-r/'>
+<meta property='og:site_name' content=''>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='stats' /><meta property='article:tag' content='lsoda' /><meta property='article:tag' content='ode' /><meta property='article:tag' content='fitting' /><meta property='article:published_time' content='2017-04-24T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2017-04-24T00:00:00&#43;00:00'/><meta property='og:image' content='https://sjfox.github.io/img/ode-sim-basic.png' />
+<meta name="twitter:title" content="Simple trick to speed up ODE integration in R">
+<meta name="twitter:description" content="Introduction I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the R environment and write CSnippets for the pomp package (more on this in a later blog), or to use RCpp, but I used the profvis package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model."><meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content='https://sjfox.github.io/img/ode-sim-basic.png' /></head><body class="">
+        <div class="container flex on-phone--column align-items--flex-start extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+
+                
+                    
+                    <img src="https://sjfox.github.io/img/fox_profile_hu6f5f2015657e98f11d1e40ee1dab7bac_1733550_300x300_resize_box_2.png" width="300"
+                        height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                <span class="emoji">🦠</span>
+            </figure>
+        
+        <h1 class="site-name"><a href="https://sjfox.github.io/"></a></h1>
+        <h2 class="site-description">A personal website and rstats blog</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/about'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/publications'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>Publications</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/media'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>Media</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sjfox.github.io/archives'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+    </ol>
+</aside>
+            <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://sjfox.github.io/" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            
+                <img src="https://sjfox.github.io/img/ode-sim-basic.png" loading="lazy" alt="Featured image of post Simple trick to speed up ODE integration in R" />
+            
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+                <a href="https://sjfox.github.io/categories/r/">R</a>
+            
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="https://sjfox.github.io/p/simple-trick-to-speed-up-ode-integration-in-r/">Simple trick to speed up ODE integration in R</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">Apr 24, 2017</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the <code>R</code> environment and write <code>CSnippets</code> for the <code>pomp</code> package (more on this in a later blog), or to use <code>RCpp</code>, but I used the <code>profvis</code> package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.</p>
+</div>
+<div id="the-model" class="section level2">
+<h2>The model</h2>
+<p>Let’s start by making a simple SIR model. This model has susceptible, infectious, and recovered individuals, and the ode will follow the number of individuals in each class over the course of the epidemic. <code>beta</code> and <code>gamma</code> will be parameters governing the transmission and recovery rates of the individuals. We’ll make two forms of the model: one that is more legible and utilizes the <code>with</code> function, and another one that is slightly less legible but accesses the vectors directly. I’ll also create a function that can run either of the different models, and return a dataframe as a result.</p>
+<pre class="r"><code>sir_simple &lt;- function(t, x, params) {
+    with(c(as.list(params), as.list(x)), {
+        dS &lt;- -beta * S * I
+        dI &lt;- beta * S * I - gamma * I
+        dR &lt;- gamma * I
+        dx &lt;- c(dS, dI, dR)
+        list(dx)
+    })
+}
+
+sir &lt;- function(t, x, params) {
+    dS &lt;- -params[&quot;beta&quot;] * x[&quot;S&quot;] * x[&quot;I&quot;]
+    dI &lt;- params[&quot;beta&quot;] * x[&quot;S&quot;] * x[&quot;I&quot;] - params[&quot;gamma&quot;] * x[&quot;I&quot;]
+    dR &lt;- params[&quot;gamma&quot;] * x[&quot;I&quot;]
+    dx &lt;- c(dS, dI, dR)
+    list(dx)
+}
+
+
+run_sir &lt;- function(init_states, times, params, sir_func) {
+    as.data.frame(lsoda(y = init_states, times = times, func = sir_func, parms = params))
+}</code></pre>
+</div>
+<div id="single-run" class="section level2">
+<h2>Single run</h2>
+<p>Now let’s initialize and run a model. We will use the <code>deSolve</code> package for running the ODEs, the <code>tidyverse</code> to handle data manipulations, and <code>cowplot</code>/<code>ggplot2</code> for visualizing. We will run the model with <span class="math inline">\(\beta=0.5\)</span> and <span class="math inline">\(\gamma=0.25\)</span>, so the disease will have an <span class="math inline">\(R_0 = \frac{\beta}{\gamma}=2\)</span>.</p>
+<pre class="r"><code>library(deSolve)
+library(tidyverse)
+library(cowplot)
+
+times &lt;- seq(0, 100, by = 1)
+params &lt;- c(beta = 0.5, gamma = 0.25)
+init_states &lt;- c(S = 9999/10000, I = 1/10000, R = 0/10000)
+
+epi_dat &lt;- run_sir(init_states, times, params, sir_simple)
+
+epi_dat %&gt;% head()</code></pre>
+<pre><code>##   time         S            I            R
+## 1    0 0.9999000 0.0001000000 0.000000e+00
+## 2    1 0.9998429 0.0001285559 2.856343e-05
+## 3    2 0.9997695 0.0001652465 6.526861e-05
+## 4    3 0.9996752 0.0002123925 1.124413e-04
+## 5    4 0.9995548 0.0002725541 1.726493e-04
+## 6    5 0.9994000 0.0003499144 2.500909e-04</code></pre>
+<pre class="r"><code>epi_dat %&gt;% gather(state, value, S:R) %&gt;% ggplot(aes(time, value, color = state)) + 
+    geom_line(size = 1)</code></pre>
+<p><img src="https://sjfox.github.io/post/ode-speedup/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/run_sim-1.png" width="672" /></p>
+<p>Let’s also confirm that both models give the same result.</p>
+<pre class="r"><code>epi_dat_base &lt;- run_sir(init_states, times, params, sir)
+
+all_equal(epi_dat, epi_dat_base)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="comparing-the-two-models" class="section level2">
+<h2>Comparing the two models</h2>
+<p>This model is extremely simplistic and runs very quickly on my machine, but let’s use the <code>microbenchmark</code> package to compare the run times of the two different models.</p>
+<pre class="r"><code>library(microbenchmark)
+benchmark_std &lt;- microbenchmark(more_readable = run_sir(init_states, times, params, 
+    sir_simple), not_readable = run_sir(init_states, times, params, sir), times = 100)
+summary(benchmark_std)</code></pre>
+<pre><code>##            expr      min       lq     mean   median       uq       max neval
+## 1 more_readable 2.410633 2.555091 2.965255 2.886905 3.048609 10.913689   100
+## 2  not_readable 1.467943 1.584885 1.813923 1.713284 1.908955  4.496621   100</code></pre>
+<pre class="r"><code>autoplot(benchmark_std) + scale_y_continuous(trans = &quot;identity&quot;)</code></pre>
+<p><img src="https://sjfox.github.io/post/ode-speedup/2017-04-19-timesteps-lsoda-and-epidemiological-models_files/figure-html/bechmarking-1.png" width="672" /></p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>Looking at the results the model without using the <code>with</code> statement runs about twice as fast as using the <code>with</code> statement. This may not seem like a big enough of a difference to matter, but shaving off seconds from the ODE simulation can reap large speed benefits when you are using fitting procedures which run many simulations to optimize parameters. The model I was fitting was much more complex, and I received an order of magnitude speed increase by removing the <code>with</code> statement from the ODE – I think I received a larger effect than the simple SIR model here, because I had many more parameters, and had other outside function calls within the ODE, though I’m not sure which one contributed stronger to the effect.</p>
+<p>This is a simple change to the model that can help shave off some time, so I would recommend trying it out with your simulations and see how much (if at all) it speeds things up. That being said, it’s always a tradeoff between code readability and speed, so if you’re not running into time issues you may want to stick with the more readable version using <code>with</code>.</p>
+<p>Do you have any other speedup tips for running and fitting ODEs in R or any questions about what I’ve done here? Would love to hear from you, so send me a message <a href="https://twitter.com/foxandtheflu">@foxandtheflu</a>.</p>
+</div>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://sjfox.github.io/tags/stats/">stats</a>
+        
+            <a href="https://sjfox.github.io/tags/lsoda/">lsoda</a>
+        
+            <a href="https://sjfox.github.io/tags/ode/">ode</a>
+        
+            <a href="https://sjfox.github.io/tags/fitting/">fitting</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="https://sjfox.github.io/p/visualizing-flight-data-with-ggplot2/">
+        
+        
+            <div class="article-image">
+                
+                    <img src="https://sjfox.github.io/img/striking_image_world_map.png" loading="lazy" data-key="" data-hash="/img/striking_image_world_map.png"/>
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Visualizing flight data with ggplot2</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="https://sjfox.github.io/p/you-should-make-an-r-package-for-your-paper/">
+        
+        
+            <div class="article-image">
+                
+                    <img src="https://sjfox.github.io/img/fig4.png" loading="lazy" data-key="" data-hash="/img/fig4.png"/>
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">You should make an R package for your paper</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+    
+        
+    <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">&copy; 2020 </section>
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="1.0.5">Stack</a></b> designed by
+        <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" style="display:none">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"
+    integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin="anonymous"></script><script type="text/javascript" src="https://sjfox.github.io/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<link rel="stylesheet" href="https://sjfox.github.io/css/highlight/light.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://sjfox.github.io/css/highlight/dark.min.css" media="(prefers-color-scheme: dark)">
+
+    </body>
+</html>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://sjfox.github.io/</loc>
+    <lastmod>2020-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/about/</loc>
+    <lastmod>2020-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/media/</loc>
+    <lastmod>2020-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/page/</loc>
+    <lastmod>2020-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/publications/</loc>
+    <lastmod>2020-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/research-interests/</loc>
+    <lastmod>2020-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/archives/</loc>
+    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/categories/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/data_viz/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/ggplot2/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/categories/maps/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/post/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/r/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/categories/r/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/p/visualizing-flight-data-with-ggplot2/</loc>
+    <lastmod>2018-01-11T15:28:21-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/blog/</loc>
+    <lastmod>2017-05-10T10:37:49-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/rtzikvrisk/</loc>
+    <lastmod>2017-05-10T10:37:49-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/p/you-should-make-an-r-package-for-your-paper/</loc>
+    <lastmod>2017-05-10T10:37:49-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/fitting/</loc>
+    <lastmod>2017-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/lsoda/</loc>
+    <lastmod>2017-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/ode/</loc>
+    <lastmod>2017-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/p/simple-trick-to-speed-up-ode-integration-in-r/</loc>
+    <lastmod>2017-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/tags/stats/</loc>
+    <lastmod>2017-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sjfox.github.io/categories/test/</loc>
+  </url>
+  
+</urlset>

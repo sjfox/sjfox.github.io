@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on </title>
+    <link>https://sjfox.github.io/tags/</link>
+    <description>Recent content in Tags on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Thu, 11 Jan 2018 15:28:21 -0600</lastBuildDate><atom:link href="https://sjfox.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>data_viz</title>
+      <link>https://sjfox.github.io/tags/data_viz/</link>
+      <pubDate>Thu, 11 Jan 2018 15:28:21 -0600</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/data_viz/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot2</title>
+      <link>https://sjfox.github.io/tags/ggplot2/</link>
+      <pubDate>Thu, 11 Jan 2018 15:28:21 -0600</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/ggplot2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>https://sjfox.github.io/tags/r/</link>
+      <pubDate>Thu, 11 Jan 2018 15:28:21 -0600</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>blog</title>
+      <link>https://sjfox.github.io/tags/blog/</link>
+      <pubDate>Wed, 10 May 2017 10:37:49 -0500</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rtZIKVrisk</title>
+      <link>https://sjfox.github.io/tags/rtzikvrisk/</link>
+      <pubDate>Wed, 10 May 2017 10:37:49 -0500</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/rtzikvrisk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>fitting</title>
+      <link>https://sjfox.github.io/tags/fitting/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/fitting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lsoda</title>
+      <link>https://sjfox.github.io/tags/lsoda/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/lsoda/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ode</title>
+      <link>https://sjfox.github.io/tags/ode/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/ode/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>stats</title>
+      <link>https://sjfox.github.io/tags/stats/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://sjfox.github.io/tags/stats/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

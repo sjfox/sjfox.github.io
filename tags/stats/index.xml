@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>stats on </title>
+    <link>https://sjfox.github.io/tags/stats/</link>
+    <description>Recent content in stats on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Mon, 24 Apr 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://sjfox.github.io/tags/stats/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Simple trick to speed up ODE integration in R</title>
+      <link>https://sjfox.github.io/p/simple-trick-to-speed-up-ode-integration-in-r/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://sjfox.github.io/p/simple-trick-to-speed-up-ode-integration-in-r/</guid>
+      <description>Introduction I recently was doing model fitting on a ton of simulations, and needed to figure out a way to speed things up. My first instinct was to get out of the R environment and write CSnippets for the pomp package (more on this in a later blog), or to use RCpp, but I used the profvis package to help diagnose the speed issues, and found a really simple change that can save a ton of time depending on your model.</description>
+    </item>
+    
+  </channel>
+</rss>
